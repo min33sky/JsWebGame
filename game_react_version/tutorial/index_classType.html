@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>React Tutorial</title>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@16/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      class Gugudan extends React.Component {
+        input = null;
+
+        constructor(props) {
+          super(props);
+          this.state = {
+            num1: Math.ceil(Math.random() * 9),
+            num2: Math.ceil(Math.random() * 9),
+            value: '',
+            result: '',
+          };
+        }
+
+        handleChange = e => {
+          this.setState({
+            value: e.target.value,
+          });
+        };
+
+        handleSubmit = e => {
+          e.preventDefault();
+          const { num1, num2, value } = this.state;
+          if (parseInt(value) === num1 * num2) {
+            this.setState((state, props) => {
+              return {
+                num1: Math.ceil(Math.random() * 9),
+                num2: Math.ceil(Math.random() * 9),
+                value: '',
+                result: '정답 : ' + state.value,
+              };
+            });
+          } else {
+            this.setState({
+              value: '',
+              result: '실패',
+            });
+          }
+          this.input.focus();
+        };
+
+        render() {
+          const { num1, num2, value, result } = this.state;
+          const { handleChange, handleSubmit } = this;
+          return (
+            <React.Fragment>
+              <form onSubmit={handleSubmit}>
+                <div>
+                  {num1} X {num2} = ?
+                </div>
+                <input
+                  ref={c => (this.input = c)}
+                  value={value}
+                  type="number"
+                  onChange={handleChange}
+                />
+                <button type="submit">입력</button>
+                <div>{result}</div>
+              </form>
+            </React.Fragment>
+          );
+        }
+      }
+    </script>
+    <script type="text/babel">
+      ReactDOM.render(<Gugudan />, document.querySelector('#root'));
+    </script>
+  </body>
+</html>
