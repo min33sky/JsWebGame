@@ -1,9 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
-
 module.exports = {
-  name: 'wordRelay-setting',
-  mode: 'development', // 실서비스 : production
+  mode: 'development',
   devtool: 'eval',
   resolve: {
     extensions: ['.js', '.jsx'],
@@ -45,6 +43,6 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'app.js',
-    publicPath: '/dist/',
+    publicPath: '/dist/', // webpack-dev-server를 위한 가상 폴더
   },
 };
