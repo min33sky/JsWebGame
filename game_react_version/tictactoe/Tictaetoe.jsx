@@ -34,7 +34,7 @@ const reducer = (state, action) => {
         turn: state.turn === 'O' ? 'X' : 'O',
       };
     case CLICK_CELL:
-      // 기존 배열을 얕은 복사로 가져온다. (React State의 불변성 때문에)
+      // 기존 배열을 얕은 복사로 가져온다. (React State의 불변성을 지키기 위해서)
       const update = [...state.tableData];
       update[action.rowNumber] = [...state.tableData[action.rowNumber]];
       update[action.rowNumber][action.cellNumber] = state.turn;
@@ -56,7 +56,7 @@ const reducer = (state, action) => {
 };
 
 // ******************************************************************* //
-// **************************** Hooks ******************************** //
+// ************************* Component ******************************* //
 // ******************************************************************* //
 
 const Tictactoe = () => {

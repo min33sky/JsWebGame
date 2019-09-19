@@ -1,4 +1,4 @@
-const React = require('react');
+import React from 'react';
 
 class Gugudan extends React.Component {
   inputRef = null;
@@ -62,4 +62,4 @@ class Gugudan extends React.Component {
   }
 }
 
-module.exports = Gugudan;
+export default Gugudan;
