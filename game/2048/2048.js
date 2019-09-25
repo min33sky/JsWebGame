@@ -1,12 +1,19 @@
 const table = document.querySelector('#table');
 const score = document.querySelector('#score');
 let data = [];
+let insertData = [[], [], [], []];
 let grade = 0;
-let newData = [[], [], [], []];
+let dragStart = false;
+let draging = false;
+let startOffset = [];
+let endOffset = [];
 
+// 초기화
 function initialize() {
   data = [];
   score.textContent = '0';
+
+  // 테이블 생성
   let fragment = document.createDocumentFragment();
   [1, 2, 3, 4].forEach(row => {
     let rowData = [];
@@ -22,6 +29,7 @@ function initialize() {
   table.appendChild(fragment);
 }
 
+// 랜덤으로 빈 셀에 숫자를 채워넣는 함수
 function randomCreate() {
   let emptyCellArr = []; // 빈 칸 위치를 담을 배열
 
@@ -47,6 +55,7 @@ function randomCreate() {
   draw();
 }
 
+// 화면 그려주는 함수
 function draw() {
   data.forEach((row, i) => {
     row.forEach((col, j) => {
@@ -58,11 +67,6 @@ function draw() {
     });
   });
 }
-
-let dragStart = false;
-let draging = false;
-let startOffset = [];
-let endOffset = [];
 
 window.addEventListener('mousedown', e => {
   dragStart = true;
@@ -95,20 +99,23 @@ window.addEventListener('mouseup', e => {
 
   switch (direction) {
     case 'left':
-      newData = [[], [], [], []];
+      // 4개의 행을 담는 배열
+      insertData = [[], [], [], []];
 
+      // 가장 왼쪽 열의 데이터가 젤 왼쪽으로 가도록 만든다.
       data.forEach((row, i) => {
         row.forEach((col, j) => {
           if (col) {
             if (
-              newData[i][newData[i].length - 1] &&
-              newData[i][newData[i].length - 1] === col
+              insertData[i][insertData[i].length - 1] &&
+              insertData[i][insertData[i].length - 1] === col
             ) {
-              newData[i][newData[i].length - 1] *= 2;
+              insertData[i][insertData[i].length - 1] *= 2;
               grade = parseInt(score.textContent, 10);
-              score.textContent = grade + newData[i][newData[i].length - 1];
+              score.textContent =
+                grade + insertData[i][insertData[i].length - 1];
             } else {
-              newData[i].push(col);
+              insertData[i].push(col);
             }
           }
         });
@@ -117,23 +124,24 @@ window.addEventListener('mouseup', e => {
       // 이동
       [1, 2, 3, 4].forEach((row, i) => {
         [1, 2, 3, 4].forEach((col, j) => {
-          data[i][j] = newData[i][j] || 0;
+          data[i][j] = insertData[i][j] || 0;
         });
       });
       break;
 
     case 'right':
-      newData = [[], [], [], []];
+      insertData = [[], [], [], []];
 
+      // 가장 오른쪽의 데이터가 제일 왼쪽으로 가게 만든다.
       data.forEach((row, i) => {
         row.forEach((col, j) => {
           if (col) {
-            if (newData[i][0] && newData[i][0] === col) {
-              newData[i][0] *= 2;
+            if (insertData[i][0] && insertData[i][0] === col) {
+              insertData[i][0] *= 2;
               grade = parseInt(score.textContent, 10);
-              score.textContent = grade + newData[i][0];
+              score.textContent = grade + insertData[i][0];
             } else {
-              newData[i].unshift(col);
+              insertData[i].unshift(col);
             }
           }
         });
@@ -142,27 +150,28 @@ window.addEventListener('mouseup', e => {
       // 이동
       [1, 2, 3, 4].forEach((row, i) => {
         [1, 2, 3, 4].forEach((col, j) => {
-          data[i][3 - j] = newData[i][j] || 0;
+          data[i][3 - j] = insertData[i][j] || 0;
         });
       });
       break;
 
     case 'up':
       // 해당 열 값을 담을 배열 (1열[1행,2행,3행,4행], 2열[], ...)
-      newData = [[], [], [], []];
+      insertData = [[], [], [], []];
 
       data.forEach((row, i) => {
         row.forEach((col, j) => {
           if (col) {
             if (
-              newData[j][newData[j].length - 1] &&
-              newData[j][newData[j].length - 1] === col
+              insertData[j][insertData[j].length - 1] &&
+              insertData[j][insertData[j].length - 1] === col
             ) {
-              newData[j][newData[j].length - 1] *= 2;
+              insertData[j][insertData[j].length - 1] *= 2;
               grade = parseInt(score.textContent, 10);
-              score.textContent = grade + newData[j][newData[j].length - 1];
+              score.textContent =
+                grade + insertData[j][insertData[j].length - 1];
             } else {
-              newData[j].push(col);
+              insertData[j].push(col);
             }
           }
         });
@@ -171,38 +180,37 @@ window.addEventListener('mouseup', e => {
       // 이동 (열,행 -> 행,열)
       [1, 2, 3, 4].forEach((row, i) => {
         [1, 2, 3, 4].forEach((col, j) => {
-          data[j][i] = newData[i][j] || 0;
+          data[j][i] = insertData[i][j] || 0;
         });
       });
 
       break;
 
     case 'down':
-      newData = [[], [], [], []];
+      // 해당 열 값을 저장할 배열
+      insertData = [[], [], [], []];
 
       data.forEach((row, i) => {
         row.forEach((col, j) => {
           if (col) {
-            if (newData[j][0] && newData[j][0] === col) {
-              newData[j][0] *= 2;
+            if (insertData[j][0] && insertData[j][0] === col) {
+              insertData[j][0] *= 2;
               grade = parseInt(score.textContent, 10);
-              score.textContent = grade + newData[j][0];
+              score.textContent = grade + insertData[j][0];
             } else {
-              newData[j].unshift(col);
+              insertData[j].unshift(col);
             }
           }
         });
       });
 
-      console.log(newData);
-
       [1, 2, 3, 4].forEach((row, i) => {
         [1, 2, 3, 4].forEach((col, j) => {
-          data[3 - j][i] = newData[i][j] || 0;
+          data[3 - j][i] = insertData[i][j] || 0;
         });
       });
-
       break;
+
     default:
       break;
   }
