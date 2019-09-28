@@ -140,13 +140,13 @@ function generate() {
       }
     });
   });
-  console.log('generate', JSON.parse(JSON.stringify(currentBlock)));
   if (isGameOver) {
     // TODO : 게임 종료 및 타이머 종료
+    clearInterval(timer);
+    draw();
     alert('게임 끝');
-    return;
   } else {
-    // TODO : 화면 그리기
+    draw();
   }
 }
 
@@ -204,7 +204,6 @@ function checkRows() {
   for (let i = 0; i < fullRowsCount; i++) {
     tetrisData.unshift(Array(10).fill(0));
   }
-  console.log(fullRows, JSON.parse(JSON.stringify(tetrisData)));
   let score = parseInt(document.querySelector('#score').textContent, 10);
   score += fullRowsCount ** 2;
   document.querySelector('#score').textContent = String(score);
@@ -227,18 +226,9 @@ function tick() {
       j < currentTopLeft[1] + currentBlockShape.length;
       j++
     ) {
-      console.log(i, j);
       if (isActiveBlock(tetrisData[i][j])) {
         activeBlock.push([i, j]);
         if (isInvalidBlock(tetrisData[i + 1] && tetrisData[i + 1][j])) {
-          console.log(
-            '아래 블록이 있다.',
-            i,
-            j,
-            tetrisData[i][j],
-            tetrisData[i + 1] && tetrisData[i + 1][j],
-            JSON.parse(JSON.stringify(tetrisData)),
-          );
           canGoDown = false;
         }
       }
@@ -270,8 +260,107 @@ function tick() {
   }
 }
 
+window.addEventListener('keydown', e => {
+  switch (e.code) {
+    case 'ArrowLeft': {
+      const nextTopLeft = [currentTopLeft[0], currentTopLeft[1] - 1];
+      let isMovable = true;
+      let currentBlockShape =
+        currentBlock.shape[currentBlock.currentShapeIndex];
+
+      for (
+        let i = currentTopLeft[0];
+        i < currentTopLeft[0] + currentBlockShape.length;
+        i++
+      ) {
+        // 왼쪽 공간 체크
+        if (!isMovable) break;
+        for (
+          let j = currentTopLeft[1];
+          j < currentTopLeft[1] + currentBlockShape.length;
+          j++
+        ) {
+          // 범위 넘어가면 넘어감
+          if (!tetrisData[i] || !tetrisData[i][j]) continue;
+
+          if (
+            isActiveBlock(tetrisData[i][j]) &&
+            isInvalidBlock(tetrisData[i] && tetrisData[i][j - 1])
+          ) {
+            isMovable = false;
+          }
+        }
+      }
+
+      if (isMovable) {
+        currentTopLeft = nextTopLeft;
+        tetrisData.forEach((row, i) => {
+          for (let j = 0; j < row.length; j++) {
+            const col = row[j];
+            if (tetrisData[i][j - 1] === 0 && col < 10) {
+              tetrisData[i][j - 1] = col;
+              tetrisData[i][j] = 0;
+            }
+          }
+        });
+        draw();
+      }
+
+      break;
+    }
+
+    case 'ArrowRight': {
+      const nextTopLeft = [currentTopLeft[0], currentTopLeft[1] + 1];
+      let isMovable = true;
+      let currentBlockShape =
+        currentBlock.shape[currentBlock.currentShapeIndex];
+
+      for (
+        let i = currentTopLeft[0];
+        i < currentTopLeft[0] + currentBlockShape.length;
+        i++
+      ) {
+        if (!isMovable) break;
+        for (
+          let j = currentTopLeft[1];
+          j < currentTopLeft[1] + currentBlockShape.length;
+          j++
+        ) {
+          // 범위 넘어가면 넘어감
+          if (!tetrisData[i] || !tetrisData[i][j]) continue;
+
+          if (
+            isActiveBlock(tetrisData[i][j]) &&
+            isInvalidBlock(tetrisData[i] && tetrisData[i][j + 1])
+          ) {
+            isMovable = false;
+          }
+        }
+      }
+
+      if (isMovable) {
+        currentTopLeft = nextTopLeft;
+        tetrisData.forEach((row, i) => {
+          for (let j = row.length - 1; j >= 0; j--) {
+            const col = row[j];
+            if (tetrisData[i][j + 1] === 0 && col <= 10) {
+              tetrisData[i][j + 1] = col;
+              tetrisData[i][j] = 0;
+            }
+          }
+        });
+        draw();
+      }
+      break;
+    }
+
+    default:
+      break;
+  }
+});
+
 // *************************************************************
 
 init();
 generate();
-timer = setInterval(tick, 1000);
+timer = setInterval(tick, 100);
