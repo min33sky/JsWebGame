@@ -1,4 +1,6 @@
 const tetris = document.querySelector('#tetris');
+const startBtn = document.querySelector('#start');
+const stopBtn = document.querySelector('#stop');
 let tetrisData = []; // 화면 데이터
 let currentBlock;
 let nextBlock;
@@ -343,7 +345,7 @@ window.addEventListener('keydown', e => {
         tetrisData.forEach((row, i) => {
           for (let j = row.length - 1; j >= 0; j--) {
             const col = row[j];
-            if (tetrisData[i][j + 1] === 0 && col <= 10) {
+            if (tetrisData[i][j + 1] === 0 && col < 10) {
               tetrisData[i][j + 1] = col;
               tetrisData[i][j] = 0;
             }
@@ -354,13 +356,125 @@ window.addEventListener('keydown', e => {
       break;
     }
 
+    case 'ArrowDown': {
+      // 블록 한 칸 내림
+      tick();
+    }
+
     default:
       break;
   }
+});
+
+window.addEventListener('keyup', e => {
+  switch (e.code) {
+    case 'ArrowUp': {
+      let currentBlockShape =
+        currentBlock.shape[currentBlock.currentShapeIndex];
+
+      let isChangeable = true;
+
+      const nextShapeIndex =
+        currentBlock.currentShapeIndex + 1 === currentBlock.shape.length
+          ? 0
+          : currentBlock.currentShapeIndex + 1;
+
+      const nextBlockShape = currentBlock.shape[nextShapeIndex];
+
+      // 형태 변환이 가능한 블록인지 체크한다.
+      for (
+        let i = currentTopLeft[0];
+        i < currentTopLeft[0] + currentBlockShape.length;
+        i++
+      ) {
+        // 움직일 수 없으면 종료
+        if (!isChangeable) break;
+
+        for (
+          let j = currentTopLeft[1];
+          j < currentTopLeft[1] + currentBlockShape.length;
+          j++
+        ) {
+          // 범위 밖이면 스킵
+          if (!tetrisData[i]) continue;
+
+          // 다음 블록 형태의 셀이 존재하지만 움직일 수 없는 블록인지 체크
+          if (
+            nextBlockShape[i - currentTopLeft[0]][j - currentTopLeft[1]] > 0 &&
+            isInvalidBlock(tetrisData[i] && tetrisData[i][j])
+          ) {
+            isChangeable = false;
+          }
+        }
+      }
+
+      if (isChangeable) {
+        // 전환했을 때 위치가 테이블 시작 위치 전이라면 한 칸 내린다. (블록 깨짐 방지)
+        while (currentTopLeft[0] < 0) {
+          tick();
+        }
+        for (
+          let i = currentTopLeft[0];
+          i < currentTopLeft[0] + currentBlockShape.length;
+          i++
+        ) {
+          for (
+            let j = currentTopLeft[1];
+            j < currentTopLeft[1] + currentBlockShape.length;
+            j++
+          ) {
+            // 범위 밖은 스킵
+            if (!tetrisData[i]) continue;
+
+            // 다음 블록의 형태 설정
+            // nextBlockShape[0 ~ 3 or 4][0 ~ 3 or 4]
+            let nextBlockShapeCell =
+              nextBlockShape[i - currentTopLeft[0]][j - currentTopLeft[1]];
+
+            // 다음 형태는 있는데 현재 칸이 없으면 셀을 채운다
+            if (nextBlockShapeCell > 0 && tetrisData[i][j] === 0) {
+              tetrisData[i][j] = currentBlock.numCode;
+            } else if (
+              // 다음 형태는 없는데 현재 칸이 있으면 셀을 비운다.
+              nextBlockShapeCell === 0 &&
+              tetrisData[i][j] &&
+              tetrisData[i][j] < 10
+            ) {
+              tetrisData[i][j] = 0;
+            }
+          }
+        }
+        currentBlock.currentShapeIndex = nextShapeIndex;
+      }
+
+      draw();
+      break;
+    }
+
+    case 'Space': {
+      // 한 번에 떨구기
+      while (tick()) {}
+      break;
+    }
+
+    default:
+      break;
+  }
+});
+
+stopBtn.addEventListener('click', () => {
+  clearInterval(timer);
+});
+
+startBtn.addEventListener('click', () => {
+  if (timer) {
+    clearInterval(timer);
+  }
+  timer = setInterval(tick, 1000);
 });
 
 // *************************************************************
 
 init();
 generate();
-timer = setInterval(tick, 100);
+timer = setInterval(tick, 1000);

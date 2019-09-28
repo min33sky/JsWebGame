@@ -36,9 +36,14 @@
       text-align: center;
     }
 
-    #score-wrapper {
+    #wrapper {
       margin-top: 20px;
+      width: 330px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
     }
+
 
     td.white {
       background-color: white;
@@ -106,7 +111,11 @@
       <td></td>
     </tr>
   </table>
-  <div id="score-wrapper">점수 : <span id="score">0</span> </div>
+  <div id="wrapper">
+    <button id="stop">중단</button>
+    <button id="start">재개</button>
+    <div>점수 : <span id="score">0</span> </div>
+  </div>
   <script src="./tetris.js"></script>
 </body>
 
