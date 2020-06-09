@@ -1,12 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>끝말잇기</title>
-  </head>
-  <body>
-    <script src="endwords.js"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>끝말 잇기</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+  <div id="word">
+    지시어
+  </div>
+
+  <div id="container">
+    <form>
+      <input type="text">
+      <button>입력</button>
+    </form>
+  </div>
+
+  <div id="result"></div>
+
+  <div class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <h1>중복입니다💢</h1>
+      <button>닫기</button>
+    </div>
+  </div>
+
+  <script src="endwords.js"></script>
+</body>
+
 </html>
