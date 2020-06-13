@@ -1,0 +1,64 @@
+@import url(//fonts.googleapis.com/earlyaccess/hanna.css);
+
+body {
+  background: #cfd8dc;
+  font-family: 'Hanna', sans-serif;
+}
+
+#container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid seagreen;
+  border-radius: 10px;
+  width: 40%;
+  background-color: azure;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+div.result {
+  width: 100%;
+  margin: 10px 20px;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+form {
+  width: 100%;
+  display: flex;
+  margin: 10px 20px;
+  font-size: 1.2rem;
+}
+
+input {
+  all: unset;
+  background-color: white;
+  border: 1px solid black;
+  padding: 5px 5px;
+  flex: 1;
+}
+
+button {
+  all: unset;
+  background-color: blueviolet;
+  color: white;
+  padding: 5px 10px;
+  margin-left: 5px;
+}
+
+div#log {
+  /* 임시 테두리 */
+  border: 1px solid red;
+
+  width: 100%;
+  height: 200px;
+  margin: 10px 20px;
+
+  padding: 4px 6px;
+}
