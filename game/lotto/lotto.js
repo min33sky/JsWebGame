@@ -1,26 +1,23 @@
 function init() {
-  console.log('Game Start...');
   const containerDOM = document.querySelector('#container');
   const lottoDOM = document.querySelector('.lotto');
   const bonusDOM = document.querySelector('.bonus');
-  const COLORS = ['green', 'yellow', 'blue', 'red', 'orange', 'violet'];
 
   const LOTTO = getLottoNumber(); // 로또번호 배열과 보너스 번호를 담은 객체
 
-  console.log(LOTTO);
-
   const interval = setInterval(() => {
     const divDOM = document.createElement('div');
-    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
-    divDOM.classList.add('number', color);
+    divDOM.classList.add('number');
 
     if (LOTTO.lottoNumber.length === 0) {
       clearInterval(interval);
       divDOM.innerText = LOTTO.bonus;
+      colorize(divDOM, LOTTO.bonus);
       bonusDOM.appendChild(divDOM);
     } else {
       const number = LOTTO.lottoNumber.splice(0, 1)[0];
       divDOM.innerText = number;
+      colorize(divDOM, number);
       lottoDOM.appendChild(divDOM);
     }
   }, 1000);
@@ -44,10 +41,29 @@ function getLottoNumber() {
     lottoNumber.push(candidates.splice(index, 1)[0]);
   }
 
-  lotto.lottoNumber = lottoNumber.slice(0, 6);
+  lotto.lottoNumber = lottoNumber.slice(0, 6).sort((p, c) => p - c);
   lotto.bonus = lottoNumber[lottoNumber.length - 1];
 
   return lotto;
+}
+
+/**
+ * 해당 DOM에 색깔을 입히는 함수
+ * @param {*} dom
+ * @param {*} number
+ */
+function colorize(dom, number) {
+  if (number < 10) {
+    dom.classList.add('red');
+  } else if (number < 20) {
+    dom.classList.add('green');
+  } else if (number < 30) {
+    dom.classList.add('yellow');
+  } else if (number < 40) {
+    dom.classList.add('orange');
+  } else if (number <= 45) {
+    dom.classList.add('blue');
+  }
 }
 
 // ***********************************
