@@ -1,41 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>로 또</title>
-    <style>
-      #number {
-        display: inline-block;
-        border: 1px solid black;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        text-align: center;
-        font-size: 2rem;
-        margin-right: 10px;
-      }
-      .green {
-        background: green;
-      }
-      .yellow {
-        background: yellow;
-      }
-      .red {
-        background: red;
-      }
-      .orange {
-        background: orange;
-      }
-      .blue {
-        background: blue;
-      }
-    </style>
-  </head>
-  <body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>로또 추첨기</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div>로또 번호</div>
     <div class="lotto"></div>
-    <div class="bonus">보너스 번호</div>
-    <script src="lotto.js"></script>
-  </body>
+    <div>보너스 번호</div>
+    <div class="bonus"></div>
+  </div>
+  <script src="lotto.js"></script>
+</body>
+
 </html>
