@@ -16,7 +16,9 @@ function init() {
   const computerDOM = document.querySelector('#computer');
   const buttonDOM = document.querySelectorAll('button');
   const scoreDOM = document.querySelector('#result');
+  const textDOM = document.querySelector('#text');
 
+  let clickFlag = false; // 연속 클릭을 막기 위한 플래그
   let cpuSelected = 'scissors';
   let userSelected = null;
   let leftCoords = IMAGE_COORDS['scissors'];
@@ -27,27 +29,40 @@ function init() {
 
   buttonDOM.forEach((button) =>
     button.addEventListener('click', (e) => {
+      if (clickFlag) {
+        console.log('1초 대기');
+        button.disabled = true;
+        return;
+      }
+
       userSelected = e.target.id;
       clearInterval(timeOut);
+      clickFlag = true;
 
       const diff = SCORE[userSelected] - SCORE[cpuSelected];
+      textDOM.classList.remove('red', 'blue', 'black');
 
       if ([-2, 1].includes(diff)) {
-        // 유저 승리
         score += 1;
+        textDOM.textContent = '당신의 승리!!! 😀';
+        textDOM.classList.add('blue');
         scoreDOM.textContent = score;
       } else if ([-1, 2].includes(diff)) {
-        // 유저 패배
         score -= 1;
+        textDOM.textContent = '패배입니다.. 🤬';
+        textDOM.classList.add('red');
         scoreDOM.textContent = score;
       } else if (diff === 0) {
-        // 비김
+        textDOM.textContent = '무승부 😲';
+        textDOM.classList.add('black');
         scoreDOM.textContent = score;
       }
 
       // 1초 후 게임 재시작
       setTimeout(() => {
         timeOut = setInterval(rotateImage, 100);
+        clickFlag = false;
+        button.disabled = false;
       }, 1000);
     }),
   );

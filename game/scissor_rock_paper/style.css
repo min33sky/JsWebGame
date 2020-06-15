@@ -10,12 +10,14 @@ body {
   top: 50%;
   left: 50%;
 
-  width: 40%;
+  width: 25%;
   height: 60%;
+  min-width: 234px;
+  min-height: 450px;
 
   transform: translate(-50%, -50%);
   border: 1px solid silver;
-  border-radius: 10px;
+  border-radius: 20px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 
   background-color: azure;
@@ -31,7 +33,6 @@ body {
 #computer {
   width: 150px;
   height: 225px;
-  /* background: url('http://en.pimg.jp/023/182/267/1/23182267.jpg') 0 0; */
 }
 
 .button-container {
@@ -47,9 +48,10 @@ button {
   all: unset;
   background-color: blueviolet;
   color: white;
-  width: 50px;
-  height: 30px;
+  width: 70px;
+  height: 35px;
   border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   text-align: center;
   cursor: pointer;
   transition: all ease-in 0.3s;
@@ -59,9 +61,31 @@ button:hover {
   background-color: darkblue;
 }
 
+#text {
+  text-align: center;
+  margin-top: 15px;
+  text-align: 1.2rem;
+}
+
 #result {
   margin-top: 20px;
   padding: 10px;
-  font-size: 1.5rem;
+  font-size: 3rem;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10%;
+}
+
+.red {
+  color: red;
+}
+
+.black {
+  color: black;
+}
+
+.blue {
+  color: blue;
 }
