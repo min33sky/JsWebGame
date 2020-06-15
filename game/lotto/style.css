@@ -10,7 +10,8 @@ body {
   top: 50%;
   left: 50%;
   width: 50%;
-  height: 300px;
+  min-width: 560px;
+  min-height: 370px;
   transform: translate(-50%, -50%);
   border: 1px solid silver;
   border-radius: 10px;
@@ -23,7 +24,6 @@ body {
 
 #container > div {
   width: 100%;
-  height: 10%;
   padding: 5px 10px;
 }
 
@@ -31,11 +31,13 @@ body {
   display: flex;
   justify-content: start;
   align-items: center;
-  height: 40%;
+  height: 30%;
+  background-color: aliceblue;
 }
 
 .bonus {
-  height: 40%;
+  height: 30%;
+  background-color: aliceblue;
 }
 
 .number {

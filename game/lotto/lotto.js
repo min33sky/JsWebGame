@@ -11,12 +11,12 @@ function init() {
 
     if (LOTTO.lottoNumber.length === 0) {
       clearInterval(interval);
-      divDOM.innerText = LOTTO.bonus;
+      divDOM.textContent = LOTTO.bonus;
       colorize(divDOM, LOTTO.bonus);
       bonusDOM.appendChild(divDOM);
     } else {
       const number = LOTTO.lottoNumber.splice(0, 1)[0];
-      divDOM.innerText = number;
+      divDOM.textContent = number;
       colorize(divDOM, number);
       lottoDOM.appendChild(divDOM);
     }
