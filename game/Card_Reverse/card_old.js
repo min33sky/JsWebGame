@@ -54,7 +54,7 @@ function cardSetting(hor, ver) {
     cardInner.appendChild(cardBack);
     card.appendChild(cardInner);
 
-    card.addEventListener('click', function(e) {
+    card.addEventListener('click', function (e) {
       if (
         !blocked && // 중간 클릭 방지
         !checkedCard.includes(card) && // 이미 성공한 카드 클릭 방지
@@ -98,7 +98,7 @@ function cardSetting(hor, ver) {
       }
     });
 
-    document.querySelector('#wrapper').appendChild(card);
+    document.querySelector('#container').appendChild(card);
   }
 
   document.querySelectorAll('.card').forEach((card, index) => {

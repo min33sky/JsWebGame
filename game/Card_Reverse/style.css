@@ -1,0 +1,72 @@
+@import url(//fonts.googleapis.com/earlyaccess/hanna.css);
+
+body {
+  background: #cfd8dc;
+  font-family: 'Hanna', sans-serif;
+}
+
+#container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: 50%;
+  height: 60%;
+  min-width: 234px;
+  min-height: 450px;
+
+  transform: translate(-50%, -50%);
+  border: 1px solid silver;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+
+  background-color: azure;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.card {
+  display: inline-block;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  width: 70px;
+  height: 100px;
+  /* 원근감 부여 속성 */
+  perspective: 140px;
+
+  cursor: pointer;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front {
+  background: navy;
+}
+
+.card-back {
+  background: gainsboro;
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 1px solid black;
+  backface-visibility: hidden;
+}
