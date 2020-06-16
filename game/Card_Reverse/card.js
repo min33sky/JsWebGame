@@ -14,39 +14,15 @@ const COLOR_EXAMPLE = [
 ];
 
 function init() {
-  console.log('Game Start');
   const containerDOM = document.querySelector('#container');
   let prevCard = null;
   let cardPair = []; // 클릭 한 카드 2개를 비교하기 위해 담을 배열
   let checkedCards = []; // 결과값을 담을 배열
-  let blocked = false; // 카드 클릭 방지
+  let blocked = false; // 카드를 뒤집을 때 카드 클릭 방지
 
-  // * 1. 카드에 적용할 색깔을 섞는다.
   let shuffledColors = shuffle(COLOR_EXAMPLE);
 
-  console.log(shuffledColors);
-
-  // * 2. 12개의 카드 DOM을 생성하고 출력한다.
-
-  Array(12)
-    .fill(0)
-    .forEach((e, i) => {
-      const cardDOM = document.createElement('div');
-      const cardInner = document.createElement('div');
-      const cardFront = document.createElement('div');
-      const cardBack = document.createElement('div');
-
-      cardDOM.classList.add('card');
-      cardInner.classList.add('card-inner');
-      cardFront.classList.add('card-front');
-      cardBack.classList.add('card-back');
-      cardBack.style.background = shuffledColors[i];
-
-      cardInner.appendChild(cardFront);
-      cardInner.appendChild(cardBack);
-      cardDOM.appendChild(cardInner);
-      containerDOM.appendChild(cardDOM);
-    });
+  generateCards(shuffledColors, containerDOM);
 
   // 카드 당 클릭 리스너 생성
   document.querySelectorAll('.card').forEach((card, i) => {
@@ -80,11 +56,17 @@ function init() {
           cardPair[0].querySelector('.card-back').style.backgroundColor ===
           cardPair[1].querySelector('.card-back').style.backgroundColor
         ) {
-          console.log('짝이 맞아요~~~~~~~~');
           cardPair.forEach((card) => {
             checkedCards.push(card);
           });
           cardPair = [];
+
+          if (checkedCards.length === 12) {
+            setTimeout(() => {
+              containerDOM.innerHTML = '';
+              init();
+            }, 1000);
+          }
         } else {
           // 색깔이 다를 때
           blocked = true;
@@ -102,6 +84,30 @@ function init() {
 
   // 카드의 뒷면을 보여주고 3초 후에 다시 뒤집는다.
   showCardBack();
+}
+
+function generateCards(shuffledColors, containerDOM) {
+  Array(12)
+    .fill(0)
+    .forEach((e, i) => {
+      const cardDOM = document.createElement('div');
+      const cardInner = document.createElement('div');
+      const cardFront = document.createElement('div');
+      const cardBack = document.createElement('div');
+
+      cardDOM.classList.add('card');
+      cardInner.classList.add('card-inner');
+      cardFront.classList.add('card-front');
+      cardBack.classList.add('card-back');
+      cardFront.textContent = i + 1;
+      cardBack.textContent = i + 1;
+      cardBack.style.background = shuffledColors[i];
+
+      cardInner.appendChild(cardFront);
+      cardInner.appendChild(cardBack);
+      cardDOM.appendChild(cardInner);
+      containerDOM.appendChild(cardDOM);
+    });
 }
 
 function showCardBack() {
