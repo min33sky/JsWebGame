@@ -1,0 +1,57 @@
+@import url(//fonts.googleapis.com/earlyaccess/hanna.css);
+
+body {
+  background: #cfd8dc;
+  font-family: 'Hanna', sans-serif;
+}
+
+#container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 40%;
+  min-width: 300px;
+  height: 55%;
+  min-height: 400px;
+
+  border-radius: 10px;
+
+  background-color: azure;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#title {
+  text-align: center;
+  text-align: 1.2rem;
+  user-select: none;
+  width: 100%;
+}
+
+#game {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+td {
+  border: 2px solid black;
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  cursor: pointer;
+}
+
+#result {
+  width: 100%;
+  text-align: center;
+  font-size: 1.2rem;
+}
