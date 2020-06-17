@@ -1,36 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>반응속도 테스트</title>
-    <style>
-      #container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 300px;
-        height: 300px;
-        user-select: none;
-        font-size: 1.5rem;
-        font-weight: 400;
-      }
 
-      #container.waiting {
-        background: yellow;
-      }
-      #container.ready {
-        background: green;
-      }
-      #container.now {
-        background: red;
-      }
-    </style>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>반응속도 테스트</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 
-  <body>
-    <div id="container" class="waiting">🤣클릭하세요🤣</div>
-    <script src="./reaction.js"></script>
-  </body>
+<body>
+  <div id="container" class="waiting">🤣클릭하세요🤣</div>
+  <script src="./reaction.js"></script>
+</body>
+
 </html>
