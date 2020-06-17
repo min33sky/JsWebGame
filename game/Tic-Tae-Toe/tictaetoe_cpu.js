@@ -1,7 +1,6 @@
 /**
  * Tic-Tae-Toe
  *
- * 1. 9칸이 있는 테이블을 생성하여 화면에 그린다. (데이터를 담을 배열도 만든다)
  */
 
 const ROW = 3;
@@ -32,7 +31,9 @@ function init() {
   gameDOM.appendChild(tableDOM);
   resultDOM.textContent = 'Your Turn';
 
-  // 클릭 리스너
+  /**
+   * 클릭 리스너
+   */
   function clickTable(e) {
     if (e.target.textContent !== '') {
       console.log('이미 클릭한 곳');
@@ -50,8 +51,6 @@ function init() {
     e.target.textContent = mark;
     gameData[rowNum][colNum] = mark;
 
-    // 승리 체크
-
     let gameResult = getGameResult(gameData);
     console.log('게임 결과', gameResult);
 
@@ -60,19 +59,23 @@ function init() {
       return;
     }
 
-    console.log(count);
-
-    // 빈 칸이 있는지 체크 (배열에 'O', 'X'만 들어있으면 게임 중단)
+    /*
+      빈 칸이 있는지 체크 (배열에 'O', 'X'만 들어있으면 게임 중단)
+    */
     if (count === 9) {
-      console.log('더 이상 공간이 없습니다.');
-
-      // TODO: 재시작 코드
+      resultDOM.textContent = '무승부! (3초 후에 다시 시작)';
+      setTimeout(() => {
+        gameDOM.innerHTML = '';
+        resultDOM.innerHTML = '';
+        init();
+      }, 3000);
 
       return;
     }
 
-    // CPU의 턴
+    // TODO : CPU의 턴
 
+    // ***** 해당 턴의 마무리 작업 ***** //
     turn = !turn; // 턴 변경
     count++;
     resultDOM.textContent = turn ? 'CPU Turn' : 'Your Turn';
