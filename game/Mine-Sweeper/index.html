@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>🎇 지 뢰 찾 기 🎇</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="setting">
+      <form>
+        <label for="row">가로</label>
+        <input id="row" type="text" placeholder="가로" value="10" />
+        <label for="col">세로</label>
+        <input id="col" type="text" placeholder="세로" value="10" />
+        <label for="mine">지뢰</label>
+        <input id="mine" type="text" placeholder="지뢰 수" value="20" />
+        <button id="exec">시작</button>
+      </form>
+    </div>
+    <div id="game">
+      <table id="table">
+        <thead class="hidden">
+          <tr>
+            <td><span id="timer">0</span>초</td>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="result">결과가 나올 자리</div>
+  </div>
+  <script src="mineSweeper.js"></script>
+</body>
+
+</html>

@@ -1,6 +1,6 @@
 # Javascript Web Game
 
-> javascript와 react를 활용한 웹 게임 만들기
+> javascript와 react를 활용한 웹 게임 만들기 (Ver. 2020)
 
 ## Contents
 
@@ -17,13 +17,17 @@
   - 로또 (update)
   - 가위바위보 (update)
   - 카드 뒤집기 (update)
+  - 반응속도 테스트 (update)
   - 틱택토 (update)
+  - 지뢰찾기 (update)
   - 짭스스톤
   - 2048
-  - 반응속도 테스트
   - 테트리스
-  - 지뢰찾기
 
 2. React
 
-- 여러가지 게임
+- 시간 나면 업데이트
+
+3. Typescript
+
+- 할까?

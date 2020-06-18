@@ -1,0 +1,100 @@
+@import url(//fonts.googleapis.com/earlyaccess/hanna.css);
+
+body {
+  background: #cfd8dc;
+  font-family: 'Hanna', sans-serif;
+}
+
+#container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 70%;
+  min-width: 300px;
+  height: 70%;
+  min-height: 400px;
+  padding: 10px 10px;
+
+  border-radius: 10px;
+
+  background-color: azure;
+
+  user-select: none;
+}
+
+#setting {
+  width: 100%;
+  /* border: 1px solid red; */
+  text-align: center;
+}
+
+input {
+  all: unset;
+  background-color: white;
+  color: navy;
+  width: 15%;
+  border: 1px solid silver;
+
+  text-align: end;
+  margin-left: 2px;
+  margin-right: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+button {
+  all: unset;
+  background-color: tomato;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all ease-in 0.3s;
+}
+
+button:hover {
+  background-color: salmon;
+}
+
+#game {
+  margin-top: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  height: 80%;
+  background-color: white;
+  border: 1px solid black;
+}
+
+table {
+  /* 테이블 셀의 간격을 없앤다. */
+  border-collapse: collapse;
+  width: 80%;
+  height: 80%;
+}
+
+td {
+  border: 1px solid #bbb;
+  background: rgb(156, 149, 149);
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+td.opened {
+  background: white;
+}
+
+#result {
+  margin-top: 10px;
+  border: 1px solid black;
+}
+
+.hidden {
+  display: none;
+}
