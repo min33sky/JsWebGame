@@ -12,8 +12,9 @@ function init() {
   const resultDOM = document.querySelector('#result');
   const tableDOM = document.createElement('table');
   const gameData = []; // 게임 상태를 담을 배열
-  let count = 1;
+  let count = 0;
   let turn = false;
+  let finishFlag = false;
 
   // 테이블 생성하기
   for (let i = 0; i < ROW; i++) {
@@ -40,8 +41,10 @@ function init() {
       return;
     }
 
+    if (finishFlag) return; // 게임이 끝났으면 클릭 금지
+
     // 몇 행 몇 열을 클릭했는지 알아내기
-    const mark = turn ? 'O' : 'X';
+    let mark = turn ? 'O' : 'X';
     const colNum = Array.from(e.target.parentNode.childNodes).indexOf(e.target);
     const rowNum = Array.from(
       e.target.parentNode.parentNode.childNodes,
@@ -51,17 +54,14 @@ function init() {
     e.target.textContent = mark;
     gameData[rowNum][colNum] = mark;
 
+    // 게임 승부 판단
     let gameResult = getGameResult(gameData);
-    console.log('게임 결과', gameResult);
-
-    if (gameResult) {
-      resultDOM.textContent = turn ? 'CPU 승리😭' : '당신의 승리😀';
-      return;
-    }
+    let gameOver = finishOrProgress(gameResult);
+    if (gameOver) return;
 
     /*
       빈 칸이 있는지 체크 (배열에 'O', 'X'만 들어있으면 게임 중단)
-    */
+      */
     if (count === 9) {
       resultDOM.textContent = '무승부! (3초 후에 다시 시작)';
       setTimeout(() => {
@@ -72,13 +72,53 @@ function init() {
 
       return;
     }
+    console.log(count);
 
-    // TODO : CPU의 턴
+    setTimeout(() => {
+      console.log('컴퓨터의 턴');
+      mark = turn ? 'O' : 'X';
 
-    // ***** 해당 턴의 마무리 작업 ***** //
-    turn = !turn; // 턴 변경
-    count++;
-    resultDOM.textContent = turn ? 'CPU Turn' : 'Your Turn';
+      const markingPossible = []; // 마킹 가능한 곳을 담을 배열
+      gameData.forEach((tr, i) => {
+        tr.forEach((td, j) => {
+          if (!['O', 'X'].includes(gameData[i][j])) {
+            markingPossible.push([i, j]);
+          }
+        });
+      });
+
+      // 가능한 공간에 마킹한다.
+      const coords =
+        markingPossible[Math.floor(Math.random() * markingPossible.length)];
+
+      // 화면과 데이터 배열에 마킹 추가
+      gameData[coords[0]][coords[1]] = mark;
+
+      const tb = document.querySelector('table');
+      tb.childNodes[coords[0]].childNodes[coords[1]].textContent = mark;
+
+      // 승부 판별
+      gameResult = getGameResult(gameData);
+      gameOver = finishOrProgress(gameResult);
+      if (gameOver) return;
+      console.log(count);
+      console.log('내 턴');
+      // ***** 게임종료가 아닐 때 다음CPU Turn' : 'Your Turn';
+    }, 1000);
+  }
+
+  function finishOrProgress(gameResult) {
+    if (gameResult) {
+      finishFlag = true;
+      resultDOM.textContent = turn ? 'YOU LOSE😭' : 'YOU WIN😀';
+      return true;
+    } else {
+      // ***** 게임종료가 아닐 때 다음 턴을 위한 준비 작업 ***** //
+      turn = !turn; // 턴 변경
+      count++;
+      resultDOM.textContent = turn ? 'CPU Turn' : 'Your Turn';
+      return false;
+    }
   }
 }
 
@@ -88,7 +128,7 @@ function init() {
 function getGameResult(table) {
   let result = false;
 
-  // 승리 조건 체크
+  // 승리 조건 체크 (가로, 새로, 대각선값의 일치)
   if (table[0][0] === table[0][1] && table[0][1] === table[0][2]) {
     result = true;
   } else if (table[1][0] === table[1][1] && table[1][1] === table[1][2]) {
