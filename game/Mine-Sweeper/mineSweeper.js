@@ -25,7 +25,10 @@ function init() {
   const theadDOM = document.querySelector('thead');
   const timerDOM = document.querySelector('#table #timer');
   const gameDOM = document.querySelector('#table tbody');
+  const resultDOM = document.querySelector('#result');
   const gameData = [];
+  let clickCellCount = 0; // 열린 셀의 개수
+  let pause = false; // 게임 중단
 
   /*
    * 게임 시작 버튼 (게임 화면과 데이터 배열을 생성한다.)
@@ -75,16 +78,55 @@ function init() {
       e.target.innerHTML = '💣';
     }
 
+    if (pause) {
+      console.log('이미 게임이 끝났습니다.');
+      return;
+    }
+
     // 클릭 좌표
     const row = Array.from(e.target.parentNode.parentNode.childNodes).indexOf(
       e.target.parentNode,
     );
     const col = Array.from(e.target.parentNode.childNodes).indexOf(e.target);
+    const mineNum = document.querySelector('#mine').value;
+
+    // 이미 열었거나 우클릭한 셀은 클릭 금지
+    if (
+      [
+        CELL_STATUS.CONFIRM,
+        CELL_STATUS.EXCLAMATION,
+        CELL_STATUS.EXCLAMATION_MINE,
+        CELL_STATUS.QUESTION,
+        CELL_STATUS.QUESTION_MINE,
+      ].includes(gameData[row][col])
+    ) {
+      console.log('이미 확인했으므로 클릭 못해요');
+      return;
+    }
+
+    // * 정상적으로 열렸을 경우에 카운트 증가 (게임 종료 조건에 사용함)
+    if (gameData[row][col] !== CELL_STATUS.CONFIRM) {
+      clickCellCount++;
+    }
 
     if (gameData[row][col] === CELL_STATUS.NORMAL) {
       // TODO: 지뢰 개수를 표시한다.
       const nearMineNumber = 0;
-      gameDOM.childNodes[row].childNodes[col].innerHTML = nearMineNumber;
+      gameData[row][col] = CELL_STATUS.CONFIRM;
+      gameDOM.childNodes[row].childNodes[col].textContent = nearMineNumber;
+    } else if (gameData[row][col] === CELL_STATUS.MINE) {
+      pause = true;
+      e.target.classList.add('red');
+      gameDOM.childNodes[row].childNodes[col].textContent = '💣';
+      resultDOM.textContent = '꽝! 개못하시네요 ㅡ_ㅡ';
+      return;
+    }
+
+    // 게임 종료 판정
+    if (clickCellCount === gameData.length * gameData[0].length - mineNum) {
+      console.log('게임 종료: 너의 승리!!');
+      pause = true;
+      resultDOM.textContent = 'You WIN';
     }
   }
 
@@ -98,17 +140,27 @@ function init() {
     );
     const col = Array.from(e.target.parentNode.childNodes).indexOf(e.target);
 
-    // TODO: 지뢰있는 곳을 우클릭했을 때도 설정해야한다.
     if (gameData[row][col] === CELL_STATUS.NORMAL) {
       gameData[row][col] = CELL_STATUS.EXCLAMATION;
-      gameDOM.childNodes[row].childNodes[col].innerHTML = '!';
+      gameDOM.childNodes[row].childNodes[col].textContent = '❗';
     } else if (gameData[row][col] === CELL_STATUS.EXCLAMATION) {
       gameData[row][col] = CELL_STATUS.QUESTION;
-      gameDOM.childNodes[row].childNodes[col].innerHTML = '?';
+      gameDOM.childNodes[row].childNodes[col].textContent = '❓';
+    } else if (gameData[row][col] === CELL_STATUS.EXCLAMATION_MINE) {
+      gameData[row][col] = CELL_STATUS.QUESTION_MINE;
+      gameDOM.childNodes[row].childNodes[col].textContent = '❓';
     } else if (gameData[row][col] === CELL_STATUS.QUESTION) {
       gameData[row][col] = CELL_STATUS.NORMAL;
-      gameDOM.childNodes[row].childNodes[col].innerHTML = '';
+      gameDOM.childNodes[row].childNodes[col].textContent = '';
+    } else if (gameData[row][col] === CELL_STATUS.QUESTION_MINE) {
+      gameData[row][col] = CELL_STATUS.MINE;
+      gameDOM.childNodes[row].childNodes[col].textContent = '';
+    } else if (gameData[row][col] === CELL_STATUS.MINE) {
+      gameData[row][col] = CELL_STATUS.EXCLAMATION_MINE;
+      gameDOM.childNodes[row].childNodes[col].textContent = '❗';
     }
+
+    console.log('[우클릭] 셀의 상태', gameData[row][col]);
   }
 }
 
@@ -127,7 +179,7 @@ function generateMine(row, col, mineNum) {
     shuffled.push(candidates.splice(index, 1)[0]);
   }
 
-  shuffled = shuffled.slice(0, mineNum);
+  shuffled = shuffled.slice(0, mineNum).sort((p, c) => p - c);
 
   return shuffled;
 }

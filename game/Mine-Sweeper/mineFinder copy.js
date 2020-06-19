@@ -4,8 +4,6 @@
  *
  */
 
-
-
 const exec = document.querySelector('#exec');
 const tbody = document.querySelector('#table tbody');
 
@@ -27,7 +25,7 @@ let count = 0; // 셀 클릭 개수
 /**
  * 지뢰 찾기 게임 시작 버튼 이벤트
  */
-exec.addEventListener('click', function() {
+exec.addEventListener('click', function () {
   tbody.innerHTML = ''; // 지뢰 찾기 판 초기화
   dataSet = []; // 데이터 초기화
   document.querySelector('#result').textContent = '';
@@ -53,7 +51,10 @@ exec.addEventListener('click', function() {
     let number = candidates.splice(idx, 1)[0];
     mineArr.push(number);
   }
-  console.log('mineArr: ', mineArr.sort((a, b) => a - b));
+  console.log(
+    'mineArr: ',
+    mineArr.sort((a, b) => a - b),
+  );
 
   // 지뢰 테이블 만들기
   for (let i = 0; i < row; i++) {
@@ -64,7 +65,7 @@ exec.addEventListener('click', function() {
       arr.push(flags.normal);
 
       // 우클릭 시
-      td.addEventListener('contextmenu', e => {
+      td.addEventListener('contextmenu', (e) => {
         e.preventDefault();
         if (progressFlag) return;
         // * 현재 td의 위치를 알기 위해선 현재 tr을 알아야하고
@@ -116,7 +117,7 @@ exec.addEventListener('click', function() {
       });
 
       // 셀 클릭 시
-      td.addEventListener('click', e => {
+      td.addEventListener('click', (e) => {
         if (progressFlag) return;
         let ptr = e.currentTarget.parentNode;
         let ptbody = e.currentTarget.parentNode.parentNode;
@@ -124,6 +125,7 @@ exec.addEventListener('click', function() {
         let ptrIdx = Array.from(ptbody.children).indexOf(ptr);
 
         if (count === col * row - mine) return; // 게임 종료
+        // 우클릭 했거나 이미 연 셀의경우는 클릭 못함
         if (
           [
             flags.open,
@@ -136,6 +138,7 @@ exec.addEventListener('click', function() {
           return;
         }
 
+        // 오픈한 셀이 아닐경우에는 카운트 업
         if (dataSet[ptrIdx][ptdIdx] !== flags.open) count++;
 
         e.currentTarget.classList.add('opened');
@@ -177,7 +180,7 @@ exec.addEventListener('click', function() {
           }
 
           // 주변 지뢰 개수
-          let numOfSurrondMines = surrounds.filter(e => e === flags.mine)
+          let numOfSurrondMines = surrounds.filter((e) => e === flags.mine)
             .length;
 
           // 지뢰 개수 화면에 출력 (숫자 0은 출력하지 않는다.)
@@ -210,8 +213,8 @@ exec.addEventListener('click', function() {
              * 중복 계산을 피하기 위해 이미 확인 한 셀은 처리하지 않는다.
              */
             surrounds
-              .filter(v => !!v) // ** 배열의 undefined를 제거하는 코드
-              .forEach(currentTarget => {
+              .filter((v) => !!v) // ** 배열의 undefined를 제거하는 코드
+              .forEach((currentTarget) => {
                 let ptr = currentTarget.parentNode;
                 let ptbody = currentTarget.parentNode.parentNode;
                 let ptdIdx = Array.from(ptr.children).indexOf(currentTarget);
@@ -239,7 +242,7 @@ exec.addEventListener('click', function() {
    * 지뢰 심기
    * - 지뢰인 배열 요소는 X로 표시
    */
-  mineArr.forEach(mine => {
+  mineArr.forEach((mine) => {
     let i = mine >= col ? Math.floor(mine / col) : 0;
     let j = mine % col;
     dataSet[i][j] = flags.mine;
