@@ -1,46 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>🎇 지 뢰 찾 기 🎇</title>
-    <style>
-      table {
-        /* 테이블 셀의 간격을 없앤다. */
-        border-collapse: collapse;
-      }
-      td {
-        border: 1px solid #bbb;
-        background: rgb(156, 149, 149);
-        width: 30px;
-        height: 30px;
-        text-align: center;
-        line-height: 20px;
-        cursor: pointer;
-      }
 
-      td.opened {
-        background: white;
-      }
-    </style>
-  </head>
-  <body>
-    <div>
-      <input id="row" type="text" placeholder="가로" value="10" />
-      <input id="col" type="text" placeholder="세로" value="10" />
-      <input id="mine" type="text" placeholder="지뢰 수" value="20" />
-      <button id="exec">실행</button>
-    </div>
-    <table id="table">
-      <thead>
-        <tr>
-          <td><span id="timer">0</span>초</td>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-    <div id="result"></div>
-    <script src="mineFinder.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>🎇 지 뢰 찾 기 🎇</title>
+  <style>
+    table {
+      /* 테이블 셀의 간격을 없앤다. */
+      border-collapse: collapse;
+    }
+
+    td {
+      border: 1px solid #bbb;
+      background: rgb(156, 149, 149);
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      line-height: 20px;
+      cursor: pointer;
+    }
+
+    td.opened {
+      background: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <input id="row" type="text" placeholder="가로" value="10" />
+    <input id="col" type="text" placeholder="세로" value="10" />
+    <input id="mine" type="text" placeholder="지뢰 수" value="20" />
+    <button id="exec">실행</button>
+  </div>
+  <table id="table">
+    <thead>
+      <tr>
+        <td><span id="timer">0</span>초</td>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div id="result"></div>
+  <script src="mineFinder copy.js"></script>
+</body>
+
 </html>

@@ -186,6 +186,8 @@ exec.addEventListener('click', function () {
           // 지뢰 개수 화면에 출력 (숫자 0은 출력하지 않는다.)
           e.currentTarget.textContent = numOfSurrondMines || '';
 
+          // *************************************************************************
+
           // 주변에 지뢰가 0이라면 주변도 함께 출력한다.
           if (numOfSurrondMines === 0) {
             let surrounds = [];

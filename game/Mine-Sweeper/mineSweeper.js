@@ -29,6 +29,8 @@ function init() {
   const gameData = [];
   let clickCellCount = 0; // 열린 셀의 개수
   let pause = false; // 게임 중단
+  let gameTimeOut,
+    startTime = 0; // 시간 체크를 위한 변수들
 
   /*
    * 게임 시작 버튼 (게임 화면과 데이터 배열을 생성한다.)
@@ -59,14 +61,18 @@ function init() {
       gameDOM.appendChild(trDOM);
       gameData.push(tr);
     }
+    // 타이머를 화면에 보여준다.
     theadDOM.classList.remove('hidden');
+
+    gameTimeOut = setInterval(() => {
+      startTime += 1;
+      timerDOM.textContent = startTime;
+    }, 1000);
 
     // 지뢰 생성 함수 호출
     const mineArr = generateMine(row, col, mineNum);
-    console.log('지뢰 인덱스', mineArr);
     // 지뢰 심기
     plantMine(gameData, mineArr, gameDOM);
-    console.log(gameData);
   });
 
   /**
@@ -83,7 +89,9 @@ function init() {
       return;
     }
 
-    // 클릭 좌표
+    /*
+     * 현재 클릭 좌표
+     */
     const row = Array.from(e.target.parentNode.parentNode.childNodes).indexOf(
       e.target.parentNode,
     );
@@ -100,7 +108,7 @@ function init() {
         CELL_STATUS.QUESTION_MINE,
       ].includes(gameData[row][col])
     ) {
-      console.log('이미 확인했으므로 클릭 못해요');
+      console.log('이미 확인했거나 우클릭 처리했으므로 클릭 금지  ');
       return;
     }
 
@@ -110,11 +118,86 @@ function init() {
     }
 
     if (gameData[row][col] === CELL_STATUS.NORMAL) {
-      // TODO: 지뢰 개수를 표시한다.
-      const nearMineNumber = 0;
+      // 클릭한 셀의 주변 셀들을 담을 배열
+      const surroundingCells = [gameData[row][col - 1], gameData[row][col + 1]];
+
+      /*
+       * 배열 범위를 넘지 않을 경우에만 개수에 포함시킨다.
+       * 2차원 배열일 경우 [행][열]에서 행이 존재하지 앟는다면 에러가 뜨지만
+       * 열이 존재하지 않는다면 undefined를 리턴한다.
+       */
+      if (gameData[row - 1]) {
+        surroundingCells.push(
+          gameData[row - 1][col - 1],
+          gameData[row - 1][col],
+          gameData[row - 1][col + 1],
+        );
+      }
+
+      if (gameData[row + 1]) {
+        surroundingCells.push(
+          gameData[row + 1][col - 1],
+          gameData[row + 1][col],
+          gameData[row + 1][col + 1],
+        );
+      }
+
+      const nearMineNumber = surroundingCells.filter((cell) =>
+        [
+          CELL_STATUS.MINE,
+          CELL_STATUS.QUESTION_MINE,
+          CELL_STATUS.EXCLAMATION_MINE,
+        ].includes(cell),
+      ).length;
+
+      /*  화면엔 근처 지뢰 개수를, 데이터 배열엔 확인한 셀 체크 */
+      e.target.classList.add('opened');
       gameData[row][col] = CELL_STATUS.CONFIRM;
-      gameDOM.childNodes[row].childNodes[col].textContent = nearMineNumber;
+      gameDOM.childNodes[row].childNodes[col].textContent =
+        nearMineNumber !== 0 ? nearMineNumber : '';
+
+      /*
+        TODO: 주위에 지뢰가 없을 경우 주변의 셀도 모두 열어준다.
+      */
+      if (nearMineNumber === 0) {
+        const surroundingDOM = [];
+        if (gameDOM.childNodes[row - 1]) {
+          surroundingDOM.push(
+            gameDOM.childNodes[row - 1].childNodes[col - 1],
+            gameDOM.childNodes[row - 1].childNodes[col],
+            gameDOM.childNodes[row - 1].childNodes[col + 1],
+          );
+        }
+        surroundingDOM.push(
+          gameDOM.childNodes[row].childNodes[col - 1],
+          gameDOM.childNodes[row].childNodes[col + 1],
+        );
+        if (gameDOM.childNodes[row + 1]) {
+          surroundingDOM.push(
+            gameDOM.childNodes[row + 1].childNodes[col - 1],
+            gameDOM.childNodes[row + 1].childNodes[col],
+            gameDOM.childNodes[row + 1].childNodes[col + 1],
+          );
+        }
+
+        // 주변 셀들을 다 클릭
+        surroundingDOM
+          .filter((v) => !!v) // ? 배열에서 Undefined 제거하는 Trick
+          .forEach((currentTarget) => {
+            // 현재 지점의 좌표를 알아낸 후 열린 셀이 아니라면 클릭해준다.
+            const ptbody = currentTarget.parentNode.parentNode;
+            const ptr = currentTarget.parentNode;
+            const ptrIndex = Array.from(ptbody.childNodes).indexOf(ptr);
+            const ptdIndex = Array.from(ptr.childNodes).indexOf(currentTarget);
+            if (gameData[ptrIndex][ptdIndex] !== CELL_STATUS.CONFIRM) {
+              currentTarget.click();
+            }
+          });
+      }
     } else if (gameData[row][col] === CELL_STATUS.MINE) {
+      // TODO: 모든 지뢰를 화면에 다 보여준다.
+
+      clearTimeout(gameTimeOut);
       pause = true;
       e.target.classList.add('red');
       gameDOM.childNodes[row].childNodes[col].textContent = '💣';
@@ -124,7 +207,7 @@ function init() {
 
     // 게임 종료 판정
     if (clickCellCount === gameData.length * gameData[0].length - mineNum) {
-      console.log('게임 종료: 너의 승리!!');
+      clearTimeout(gameTimeOut);
       pause = true;
       resultDOM.textContent = 'You WIN';
     }
