@@ -27,35 +27,37 @@ body {
 
 #setting {
   width: 100%;
-  /* border: 1px solid red; */
-  text-align: center;
+  /* text-align: center;/ */
 }
 
-input {
-  all: unset;
-  background-color: white;
-  color: navy;
-  width: 15%;
-  border: 1px solid silver;
-
-  text-align: end;
-  margin-left: 2px;
-  margin-right: 5px;
-  padding: 5px 10px;
+select {
+  width: 100px; /* 원하는 너비설정 */
+  height: 30px;
+  padding: 0.5em 0.5em; /* 여백으로 높이 설정 */
+  font-family: inherit; /* 폰트 상속 */
+  background: url(https://farm1.staticflickr.com/379/19928272501_4ef877c265_t.jpg)
+    no-repeat 95% 50%; /* 네이티브 화살표 대체 */
+  border: 1px solid #999;
+  border-radius: 0px; /* iOS 둥근모서리 제거 */
+  -webkit-appearance: none; /* 네이티브 외형 감추기 */
+  -moz-appearance: none;
+  appearance: none;
   cursor: pointer;
 }
 
 button {
   all: unset;
-  background-color: tomato;
+  height: 30px;
+  padding: 0 10px;
+  background-color: salmon;
   color: white;
-  padding: 5px 10px;
   cursor: pointer;
   transition: all ease-in 0.2s;
+  float: right;
 }
 
 button:hover {
-  background-color: salmon;
+  background-color: tomato;
 }
 
 #game {
@@ -102,4 +104,9 @@ td.opened {
 
 .red {
   background-color: red;
+}
+
+thead tr td {
+  border: none;
+  background-color: white;
 }

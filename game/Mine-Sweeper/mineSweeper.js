@@ -2,12 +2,6 @@
  * 지뢰 찾기
  */
 
-/*
-  TODO:
-  2. 셀 클릭 시 지뢰면 게임 끝 아니면 근처의 지뢰 개수 표시하기
-  3. 타이머 기능
-*/
-
 // 셀의 상태
 const CELL_STATUS = {
   NORMAL: 0,
@@ -19,6 +13,13 @@ const CELL_STATUS = {
   QUESTION_MINE: -5, // 지뢰 있는 곳에 물음표
 };
 
+// 난이도당 게임 설정
+const GAME_SETTING = {
+  easy: { row: 4, col: 4, mine: 2 },
+  normal: { row: 6, col: 6, mine: 8 },
+  hard: { row: 8, col: 8, mine: 10 },
+};
+
 function init() {
   console.log('Game Start....');
   const execDOM = document.querySelector('#exec');
@@ -26,7 +27,12 @@ function init() {
   const timerDOM = document.querySelector('#table #timer');
   const gameDOM = document.querySelector('#table tbody');
   const resultDOM = document.querySelector('#result');
+  const difficultyDOM = document.querySelector('#difficulty');
   const gameData = [];
+  let mineArr = [];
+  let mineNum = 0,
+    row = 0,
+    col = 0;
   let clickCellCount = 0; // 열린 셀의 개수
   let pause = false; // 게임 중단
   let gameTimeOut,
@@ -44,9 +50,12 @@ function init() {
       return;
     }
 
-    const row = document.querySelector('#row').value;
-    const col = document.querySelector('#col').value;
-    const mineNum = document.querySelector('#mine').value;
+    const difficulty =
+      GAME_SETTING[difficultyDOM.options[difficultyDOM.selectedIndex].value];
+
+    row = difficulty.row;
+    col = difficulty.col;
+    mineNum = difficulty.mine;
 
     for (let i = 0; i < row; i++) {
       const trDOM = document.createElement('tr');
@@ -70,7 +79,7 @@ function init() {
     }, 1000);
 
     // 지뢰 생성 함수 호출
-    const mineArr = generateMine(row, col, mineNum);
+    mineArr = generateMine(row, col, mineNum);
     // 지뢰 심기
     plantMine(gameData, mineArr, gameDOM);
   });
@@ -79,11 +88,6 @@ function init() {
    * 셀 클릭 리스너
    */
   function clickCell(e) {
-    // * 임시로 지뢰를 클릭했을 때 지뢰 표시하기
-    if (e.target.dataset.mine === 'X') {
-      e.target.innerHTML = '💣';
-    }
-
     if (pause) {
       console.log('이미 게임이 끝났습니다.');
       return;
@@ -96,7 +100,6 @@ function init() {
       e.target.parentNode,
     );
     const col = Array.from(e.target.parentNode.childNodes).indexOf(e.target);
-    const mineNum = document.querySelector('#mine').value;
 
     // 이미 열었거나 우클릭한 셀은 클릭 금지
     if (
@@ -157,8 +160,8 @@ function init() {
         nearMineNumber !== 0 ? nearMineNumber : '';
 
       /*
-        TODO: 주위에 지뢰가 없을 경우 주변의 셀도 모두 열어준다.
-      */
+       * 주변에 지뢰가 없을 경우 주변 셀도 함께 열어준다.
+       */
       if (nearMineNumber === 0) {
         const surroundingDOM = [];
         if (gameDOM.childNodes[row - 1]) {
@@ -195,17 +198,21 @@ function init() {
           });
       }
     } else if (gameData[row][col] === CELL_STATUS.MINE) {
-      // TODO: 모든 지뢰를 화면에 다 보여준다.
-
+      /*
+       * 지뢰를 클릭 시 게임 종료
+        - 게임을 중단시키고 모든 지뢰를 화면에 보여준다.
+       */
       clearTimeout(gameTimeOut);
       pause = true;
-      e.target.classList.add('red');
       gameDOM.childNodes[row].childNodes[col].textContent = '💣';
+      plantMine(gameData, mineArr, gameDOM, true);
       resultDOM.textContent = '꽝! 개못하시네요 ㅡ_ㅡ';
       return;
     }
 
-    // 게임 종료 판정
+    /*
+     * 게임 종료 판정
+     */
     if (clickCellCount === gameData.length * gameData[0].length - mineNum) {
       clearTimeout(gameTimeOut);
       pause = true;
@@ -214,7 +221,8 @@ function init() {
   }
 
   /**
-   * 셀 우클릭 리스너
+   * 셀 우클릭 함수
+   * - 느낌표, 물음표 처리
    */
   function rightClickCell(e) {
     e.preventDefault();
@@ -242,13 +250,14 @@ function init() {
       gameData[row][col] = CELL_STATUS.EXCLAMATION_MINE;
       gameDOM.childNodes[row].childNodes[col].textContent = '❗';
     }
-
-    console.log('[우클릭] 셀의 상태', gameData[row][col]);
   }
 }
 
 /**
- * 지뢰 생성 함수
+ * 지뢰를 생성하고 지뢰들을 담은 배열을 리턴한다.
+ * @param {number} row 행의 개수
+ * @param {number} col 열의 개수
+ * @param {number} mineNum 지뢰 개수
  */
 function generateMine(row, col, mineNum) {
   const candidates = Array(col * row)
@@ -268,17 +277,23 @@ function generateMine(row, col, mineNum) {
 }
 
 /**
- * 지뢰 심는 함수
+ * 지뢰를 심는 함수
+ * @param {array} gameData 셀 상태를 저장하는 배열
+ * @param {Array} mineArr 지뢰 위치를 저장한 배열
+ * @param {HTMLElement} gameDOM 게임 화면을 보여줄 DOM
+ * @param {boolean} gameEnd 게임 종료 시 모든 지뢰를 표시하기 위한 변수
  */
-function plantMine(gameData, mineArr, gameDOM) {
+function plantMine(gameData, mineArr, gameDOM, gameEnd) {
   mineArr.forEach((mine) => {
     let row = Math.floor(mine / gameData[0].length);
     let col = Math.floor(mine % gameData[0].length);
     gameData[row][col] = CELL_STATUS.MINE;
-    gameDOM.childNodes[row].childNodes[col].dataset.mine = 'X';
+    if (gameEnd) {
+      gameDOM.childNodes[row].childNodes[col].textContent = '💣';
+    }
   });
 }
 
-// **************************************
+// ********************************************************************************
 
 init();

@@ -12,15 +12,12 @@
 <body>
   <div id="container">
     <div id="setting">
-      <form>
-        <label for="row">가로</label>
-        <input id="row" type="text" placeholder="가로" value="10" />
-        <label for="col">세로</label>
-        <input id="col" type="text" placeholder="세로" value="10" />
-        <label for="mine">지뢰</label>
-        <input id="mine" type="text" placeholder="지뢰 수" value="20" />
-        <button id="exec">시작</button>
-      </form>
+      <select id="difficulty">
+        <option value="easy">쉬움</option>
+        <option value="normal">보통</option>
+        <option value="hard">어려움</option>
+      </select>
+      <button id="exec">시작</button>
     </div>
     <div id="game">
       <table id="table">
