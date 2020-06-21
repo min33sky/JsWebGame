@@ -1,6 +1,23 @@
-/**
+/**********************************************************
  * 지뢰 찾기
- */
+ **********************************************************/
+
+const execDOM = document.querySelector('#exec');
+const theadDOM = document.querySelector('thead');
+const timerDOM = document.querySelector('#table #timer');
+const gameDOM = document.querySelector('#table tbody');
+const resultDOM = document.querySelector('#result');
+const difficultyDOM = document.querySelector('#difficulty');
+const gameData = [];
+
+let mineArr = []; // 지뢰들이 있는 셀
+let mineNum = 0;
+let row = 0;
+let col = 0;
+let clickCellCount = 0; // 열린 셀의 개수
+let pause = false; // 게임 중단
+let gameTimeOut = null;
+let startTime = 0; // 시간 체크를 위한 변수들
 
 // 셀의 상태
 const CELL_STATUS = {
@@ -13,30 +30,15 @@ const CELL_STATUS = {
   QUESTION_MINE: -5, // 지뢰 있는 곳에 물음표
 };
 
-// 난이도당 게임 설정
+// 난이도별 게임 설정
 const GAME_SETTING = {
-  easy: { row: 4, col: 4, mine: 2 },
+  easy: { row: 4, col: 4, mine: 4 },
   normal: { row: 6, col: 6, mine: 8 },
   hard: { row: 8, col: 8, mine: 10 },
 };
 
 function init() {
   console.log('Game Start....');
-  const execDOM = document.querySelector('#exec');
-  const theadDOM = document.querySelector('thead');
-  const timerDOM = document.querySelector('#table #timer');
-  const gameDOM = document.querySelector('#table tbody');
-  const resultDOM = document.querySelector('#result');
-  const difficultyDOM = document.querySelector('#difficulty');
-  const gameData = [];
-  let mineArr = [];
-  let mineNum = 0,
-    row = 0,
-    col = 0;
-  let clickCellCount = 0; // 열린 셀의 개수
-  let pause = false; // 게임 중단
-  let gameTimeOut,
-    startTime = 0; // 시간 체크를 위한 변수들
 
   /*
    * 게임 시작 버튼 (게임 화면과 데이터 배열을 생성한다.)
@@ -201,9 +203,11 @@ function init() {
       /*
        * 지뢰를 클릭 시 게임 종료
         - 게임을 중단시키고 모든 지뢰를 화면에 보여준다.
+        - 현재 클릭한 지뢰는 빨간색 배경으로 포인트를 준다.
        */
       clearTimeout(gameTimeOut);
       pause = true;
+      gameDOM.childNodes[row].childNodes[col].classList.add('red');
       gameDOM.childNodes[row].childNodes[col].textContent = '💣';
       plantMine(gameData, mineArr, gameDOM, true);
       resultDOM.textContent = '꽝! 개못하시네요 ㅡ_ㅡ';

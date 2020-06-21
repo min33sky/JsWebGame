@@ -1,5 +1,9 @@
 @import url(//fonts.googleapis.com/earlyaccess/hanna.css);
 
+/*
+  지뢰찾기 CSS
+*/
+
 body {
   background: #cfd8dc;
   font-family: 'Hanna', sans-serif;
@@ -12,7 +16,7 @@ body {
   transform: translate(-50%, -50%);
 
   width: 50%;
-  min-width: 300px;
+  min-width: 350px;
   height: 70%;
   min-height: 400px;
   padding: 10px 10px;
