@@ -14,17 +14,39 @@ const blocks = [
     name: 's',
     numCode: 1,
     currentShapeIndex: 0,
-    shape: [[[0, 0, 0], [0, 1, 1], [0, 1, 1]]],
+    shape: [
+      [
+        [0, 0, 0],
+        [0, 1, 1],
+        [0, 1, 1],
+      ],
+    ],
   },
   {
     name: 't',
     numCode: 2,
     currentShapeIndex: 0,
     shape: [
-      [[0, 0, 0], [1, 1, 1], [0, 1, 0]],
-      [[0, 1, 0], [1, 1, 0], [0, 1, 0]],
-      [[0, 1, 0], [1, 1, 1], [0, 0, 0]],
-      [[0, 1, 0], [0, 1, 1], [0, 1, 0]],
+      [
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 1, 0],
+      ],
+      [
+        [0, 1, 0],
+        [1, 1, 0],
+        [0, 1, 0],
+      ],
+      [
+        [0, 1, 0],
+        [1, 1, 1],
+        [0, 0, 0],
+      ],
+      [
+        [0, 1, 0],
+        [0, 1, 1],
+        [0, 1, 0],
+      ],
     ],
   },
   {
@@ -32,10 +54,26 @@ const blocks = [
     numCode: 3,
     currentShapeIndex: 0,
     shape: [
-      [[0, 0, 0], [1, 1, 0], [0, 1, 1]],
-      [[0, 1, 0], [1, 1, 0], [1, 0, 0]],
-      [[1, 1, 0], [0, 1, 1], [0, 0, 0]],
-      [[0, 0, 1], [0, 1, 1], [0, 1, 0]],
+      [
+        [0, 0, 0],
+        [1, 1, 0],
+        [0, 1, 1],
+      ],
+      [
+        [0, 1, 0],
+        [1, 1, 0],
+        [1, 0, 0],
+      ],
+      [
+        [1, 1, 0],
+        [0, 1, 1],
+        [0, 0, 0],
+      ],
+      [
+        [0, 0, 1],
+        [0, 1, 1],
+        [0, 1, 0],
+      ],
     ],
   },
   {
@@ -43,10 +81,26 @@ const blocks = [
     numCode: 4,
     currentShapeIndex: 0,
     shape: [
-      [[0, 0, 0], [0, 1, 1], [1, 1, 0]],
-      [[1, 0, 0], [1, 1, 0], [0, 1, 0]],
-      [[0, 1, 1], [1, 1, 0], [0, 0, 0]],
-      [[0, 1, 0], [0, 1, 1], [0, 0, 1]],
+      [
+        [0, 0, 0],
+        [0, 1, 1],
+        [1, 1, 0],
+      ],
+      [
+        [1, 0, 0],
+        [1, 1, 0],
+        [0, 1, 0],
+      ],
+      [
+        [0, 1, 1],
+        [1, 1, 0],
+        [0, 0, 0],
+      ],
+      [
+        [0, 1, 0],
+        [0, 1, 1],
+        [0, 0, 1],
+      ],
     ],
   },
   {
@@ -54,10 +108,26 @@ const blocks = [
     numCode: 5,
     currentShapeIndex: 0,
     shape: [
-      [[0, 0, 0], [1, 1, 1], [1, 0, 0]],
-      [[1, 1, 0], [0, 1, 0], [0, 1, 0]],
-      [[0, 0, 1], [1, 1, 1], [0, 0, 0]],
-      [[0, 1, 0], [0, 1, 0], [0, 1, 1]],
+      [
+        [0, 0, 0],
+        [1, 1, 1],
+        [1, 0, 0],
+      ],
+      [
+        [1, 1, 0],
+        [0, 1, 0],
+        [0, 1, 0],
+      ],
+      [
+        [0, 0, 1],
+        [1, 1, 1],
+        [0, 0, 0],
+      ],
+      [
+        [0, 1, 0],
+        [0, 1, 0],
+        [0, 1, 1],
+      ],
     ],
   },
   {
@@ -65,10 +135,26 @@ const blocks = [
     numCode: 6,
     currentShapeIndex: 0,
     shape: [
-      [[0, 0, 0], [1, 1, 1], [0, 0, 1]],
-      [[0, 1, 0], [0, 1, 0], [1, 1, 0]],
-      [[1, 0, 0], [1, 1, 1], [0, 0, 0]],
-      [[0, 1, 1], [0, 1, 0], [0, 1, 0]],
+      [
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 0, 1],
+      ],
+      [
+        [0, 1, 0],
+        [0, 1, 0],
+        [1, 1, 0],
+      ],
+      [
+        [1, 0, 0],
+        [1, 1, 1],
+        [0, 0, 0],
+      ],
+      [
+        [0, 1, 1],
+        [0, 1, 0],
+        [0, 1, 0],
+      ],
     ],
   },
   {
@@ -76,17 +162,37 @@ const blocks = [
     numCode: 7,
     currentShapeIndex: 0,
     shape: [
-      [[0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0]],
-      [[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]],
-      [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]],
-      [[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]],
+      [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [1, 1, 1, 1],
+        [0, 0, 0, 0],
+      ],
+      [
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+      ],
+      [
+        [0, 0, 0, 0],
+        [1, 1, 1, 1],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ],
+      [
+        [0, 0, 1, 0],
+        [0, 0, 1, 0],
+        [0, 0, 1, 0],
+        [0, 0, 1, 0],
+      ],
     ],
   },
 ];
 
 // 움직일 수 있는 블록인지 아닌지 확인
-const isActiveBlock = value => value > 0 && value < 10;
-const isInvalidBlock = value => value === undefined || value >= 10;
+const isActiveBlock = (value) => value > 0 && value < 10;
+const isInvalidBlock = (value) => value === undefined || value >= 10;
 
 // 초기화
 function init() {
@@ -94,10 +200,10 @@ function init() {
   // ? 직접 DOM을 건드는 것보다 자원이 절약된다.
   const fragment = document.createDocumentFragment();
 
-  [...Array(20).keys()].forEach(i => {
+  [...Array(20).keys()].forEach((i) => {
     const tr = document.createElement('tr');
     fragment.appendChild(tr);
-    [...Array(10).keys()].forEach(j => {
+    [...Array(10).keys()].forEach((j) => {
       const td = document.createElement('td');
       tr.appendChild(td);
     });
@@ -239,7 +345,7 @@ function tick() {
 
   // 아래 블록이 있으면
   if (!canGoDown) {
-    activeBlock.forEach(block => {
+    activeBlock.forEach((block) => {
       tetrisData[block[0]][block[1]] *= 10; // 고정된 블록으로 바꿈
     });
     checkRows(); // 지워질 블록이 있는지 확인
@@ -262,7 +368,7 @@ function tick() {
   }
 }
 
-window.addEventListener('keydown', e => {
+window.addEventListener('keydown', (e) => {
   switch (e.code) {
     case 'ArrowLeft': {
       const nextTopLeft = [currentTopLeft[0], currentTopLeft[1] - 1];
@@ -366,7 +472,7 @@ window.addEventListener('keydown', e => {
   }
 });
 
-window.addEventListener('keyup', e => {
+window.addEventListener('keyup', (e) => {
   switch (e.code) {
     case 'ArrowUp': {
       let currentBlockShape =
