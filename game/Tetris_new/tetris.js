@@ -414,6 +414,64 @@ const isInvalidBlock = (value) => {
   return value === undefined || value >= 10;
 };
 
+/**************************************************************
+ * 키보드 이벤트
+ **************************************************************/
+window.addEventListener('keydown', (e) => {
+  switch (e.code) {
+    case 'ArrowLeft':
+      const nextTopLeft = [currentTopLeft[0], currentTopLeft[1] - 1];
+      let isMoveable = true;
+      const currentBlockShape =
+        currentBlock.shape[currentBlock.currentShapeIndex];
+
+      for (
+        let i = currentTopLeft[0];
+        i < currentTopLeft[0] + currentBlockShape.length;
+        i++
+      ) {
+        if (!isMoveable) break;
+        for (
+          let j = currentTopLeft[1];
+          j < currentTopLeft[1] + currentBlockShape.length;
+          j++
+        ) {
+          // ! 콘솔창에 경고 뜨는거 막기
+          if (!gameData[i] || !gameData[i][j]) continue;
+
+          if (
+            isActiveBlock(gameData[i][j]) &&
+            isInvalidBlock(gameData[i] && gameData[i][j - 1])
+          ) {
+            isMoveable = false;
+          }
+        }
+      }
+
+      // 이동할 수 있다면 블록 이동
+      if (isMoveable) {
+        currentTopLeft = nextTopLeft;
+        gameData.forEach((row, i) => {
+          row.forEach((col, j) => {
+            if (gameData[i][j - 1] === 0 && col < 10) {
+              gameData[i][j - 1] = col;
+              gameData[i][j] = 0;
+            }
+          });
+        });
+        draw();
+      }
+
+      break;
+    case 'ArrowRight':
+      console.log('오른쪽');
+      break;
+
+    default:
+      break;
+  }
+});
+
 // ************************************************************************
 
 init();
