@@ -24,7 +24,7 @@ body {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   border-radius: 10px;
 
-  background-color: azure;
+  background-color: white;
 
   user-select: none;
 }
@@ -57,12 +57,27 @@ td {
   top: 10%;
   left: 80%;
   width: 10%;
-  height: 200px;
+  height: 140px;
   border: none;
   border-radius: 10px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 
-  background-color: azure;
+  background-color: white;
+}
+
+#next-block-container > div {
+  text-align: center;
+  font-size: 1.2rem;
+  margin: 5px 0;
+}
+#next-block-container table {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+#next-block-container td {
+  border: none;
 }
 
 .red {
