@@ -334,6 +334,10 @@ function tick() {
       j < currentTopLeft[1] + currentBlockShape.length;
       j++
     ) {
+      /*
+       * 1. 현재 블록이 움직일 수 있는 블록인지 체크
+       * 2. 아래로 움직일 수 없고 아래에 블록이 있을 때는 이동을 중지시킨다.
+       */
       if (isActiveBlock(tetrisData[i][j])) {
         activeBlock.push([i, j]);
         if (isInvalidBlock(tetrisData[i + 1] && tetrisData[i + 1][j])) {
