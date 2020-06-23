@@ -419,9 +419,9 @@ const isInvalidBlock = (value) => {
  **************************************************************/
 window.addEventListener('keydown', (e) => {
   switch (e.code) {
-    case 'ArrowLeft':
+    case 'ArrowLeft': {
       const nextTopLeft = [currentTopLeft[0], currentTopLeft[1] - 1];
-      let isMoveable = true;
+      let isMovable = true;
       const currentBlockShape =
         currentBlock.shape[currentBlock.currentShapeIndex];
 
@@ -430,7 +430,7 @@ window.addEventListener('keydown', (e) => {
         i < currentTopLeft[0] + currentBlockShape.length;
         i++
       ) {
-        if (!isMoveable) break;
+        if (!isMovable) break;
         for (
           let j = currentTopLeft[1];
           j < currentTopLeft[1] + currentBlockShape.length;
@@ -443,13 +443,13 @@ window.addEventListener('keydown', (e) => {
             isActiveBlock(gameData[i][j]) &&
             isInvalidBlock(gameData[i] && gameData[i][j - 1])
           ) {
-            isMoveable = false;
+            isMovable = false;
           }
         }
       }
 
       // 이동할 수 있다면 블록 이동
-      if (isMoveable) {
+      if (isMovable) {
         currentTopLeft = nextTopLeft;
         gameData.forEach((row, i) => {
           row.forEach((col, j) => {
@@ -463,9 +463,62 @@ window.addEventListener('keydown', (e) => {
       }
 
       break;
-    case 'ArrowRight':
-      console.log('오른쪽');
+    }
+
+    case 'ArrowRight': {
+      console.log('Right Move');
+      const nextTopLeft = [currentTopLeft[0], currentTopLeft[1] + 1];
+      let isMovable = true;
+      let currentBlockShape =
+        currentBlock.shape[currentBlock.currentShapeIndex];
+
+      console.log(currentBlockShape);
+
+      // 이동 가능한 블록인지 확인
+      for (
+        let i = currentTopLeft[0];
+        i < currentTopLeft[0] + currentBlockShape.length;
+        i++
+      ) {
+        if (!isMovable) {
+          break;
+        }
+        // 오른쪽 이동이므로 오른쪽 끝부터 체크해보자
+        for (
+          let j = currentTopLeft[1];
+          j < currentTopLeft[1] + currentBlockShape.length;
+          j++
+        ) {
+          // 현재 데이터 있는지 체크
+          if (!gameData[i] || !gameData[i][j]) continue;
+
+          if (
+            isActiveBlock(gameData[i][j]) &&
+            isInvalidBlock(gameData[i] && gameData[i][j + 1])
+          ) {
+            console.log('이동 불가능한 블록');
+            isMovable = false;
+          }
+        }
+      }
+
+      // 이동 가능할 때만 블록을 움직이고 다시 화면을 그려준다.
+      if (isMovable) {
+        currentTopLeft = nextTopLeft;
+        gameData.forEach((row, i) => {
+          for (let j = row.length - 1; j >= 0; j--) {
+            const col = row[j];
+            if (gameData[i][j + 1] === 0 && col < 10) {
+              gameData[i][j + 1] = col;
+              gameData[i][j] = 0;
+            }
+          }
+        });
+        draw();
+      }
+
       break;
+    }
 
     default:
       break;
