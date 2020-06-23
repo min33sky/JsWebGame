@@ -13,7 +13,7 @@ const gameDOM = document.querySelector('#game');
 const nextBlockDOM = document.querySelector('#next-block');
 const gameData = []; // 게임 진행 데이터가 저장될 배열
 
-const ROW = 24; // 테이블 세로
+const ROW = 22; // 테이블 세로
 const COL = 10; // 테이블 가로
 let timeOut = 0; // 타이머 관련 변수
 
@@ -205,10 +205,10 @@ const BLOCKS = [
         [0, 0, 0, 0],
       ],
       [
-        [0, 0, 1, 0],
-        [0, 0, 1, 0],
-        [0, 0, 1, 0],
-        [0, 0, 1, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
       ],
     ],
   },
@@ -517,6 +517,98 @@ window.addEventListener('keydown', (e) => {
         draw();
       }
 
+      break;
+    }
+
+    case 'ArrowUp': {
+      // 전환했을 때 위치가 테이블 시작 위치 전이라면 한 칸 내린다. (블록 깨짐 방지)
+      while (currentTopLeft[0] < 0) {
+        moveBlockDown();
+      }
+
+      // 블록의 모양을 바꿀꺼다.
+      // 모양을 바꿀 공간이 있을 때만 모양을 바꾼다.
+      const currentBlockShape =
+        currentBlock.shape[currentBlock.currentShapeIndex];
+      let isChangeable = true;
+      let nextBlockShapeIndex =
+        currentBlock.currentShapeIndex + 1 === currentBlock.shape.length
+          ? 0
+          : currentBlock.currentShapeIndex + 1;
+      let nextBlockShape = currentBlock.shape[nextBlockShapeIndex];
+
+      for (
+        let i = currentTopLeft[0];
+        i < currentTopLeft[0] + currentBlockShape.length;
+        i++
+      ) {
+        if (!isChangeable) break;
+
+        for (
+          let j = currentTopLeft[1];
+          j < currentTopLeft[1] + currentBlockShape.length;
+          j++
+        ) {
+          // 데이터가 아직 없으면 스킵
+          if (!gameData[i]) continue;
+
+          /*
+            * 다음 블록의 해당 셀이 존재하지만 현재 바꿀 수 없는 블록일 경우를 체크
+            ? i - currentTopleft[0]을 하는 이유
+            - i는 계속 증가하는데 nextBlockShape의 범위는 제한되어 있기 때문에
+            - 현재 위치를 계속 재설정 해줘야 인덱스 에러가 발생하지 않는다.
+           */
+          if (
+            // nextBlockShape[i - currentTopLeft[0]][j - currentTopLeft[1]] > 0 &&
+            isInvalidBlock(gameData[i] && gameData[i][j])
+          ) {
+            console.log('모양 바꾸기 불가능');
+            isChangeable = false;
+          }
+        }
+      }
+
+      if (isChangeable) {
+        for (
+          let i = currentTopLeft[0];
+          i < currentTopLeft[0] + currentBlockShape.length;
+          i++
+        ) {
+          for (
+            let j = currentTopLeft[1];
+            j < currentTopLeft[1] + currentBlockShape.length;
+            j++
+          ) {
+            if (!gameData[i]) continue;
+
+            let nextBlockShapeCell =
+              nextBlockShape[i - currentTopLeft[0]][j - currentTopLeft[1]];
+
+            if (nextBlockShapeCell > 0 && gameData[i][j] === 0) {
+              gameData[i][j] = currentBlock.numCode;
+            } else if (
+              nextBlockShapeCell === 0 &&
+              gameData[i][j] &&
+              gameData[i][j] < 10
+            ) {
+              gameData[i][j] = 0;
+            }
+          }
+        }
+        currentBlock.currentShapeIndex = nextBlockShapeIndex;
+      }
+      draw();
+      break;
+    }
+
+    case 'ArrowDown': {
+      console.log('아래');
+      moveBlockDown();
+      break;
+    }
+
+    case 'Space': {
+      console.log('스페이스');
       break;
     }
 
