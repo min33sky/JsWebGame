@@ -9,16 +9,16 @@
   3. 1초마다 블록이 아래로 내려간다.(하단에 고정된 블록은 움직이지 않는다.)
  */
 
-const gameDOM = document.querySelector('#game');
-const nextBlockDOM = document.querySelector('#next-block');
+const gameDOM = document.querySelector('#game'); // 게임 화면
+const nextBlockDOM = document.querySelector('#next-block'); // 다음 블록 화면
 const gameData = []; // 게임 진행 데이터가 저장될 배열
 
 const ROW = 22; // 테이블 세로
 const COL = 10; // 테이블 가로
 let timeOut = 0; // 타이머 관련 변수
 
-let currentBlock = null;
-let nextBlock = null;
+let currentBlock = null; // 현재 블록
+let nextBlock = null; // 다음 블록
 let currentTopLeft = null; // 현재 블록 위치
 
 // 블록 색깔
@@ -218,8 +218,8 @@ function init() {
   console.log('Game Start....');
 
   // 화면과 데이터 배열 생성
-  generateTable(true);
-  generateTable(false);
+  generateTable();
+  generateNextBlockTable();
   // 블록 생성하기
   generateBlock();
   // 화면 그리기
@@ -229,23 +229,20 @@ function init() {
 /**
  * 게임 데이터를 담을 배열과 화면에 그릴 테이블을 생성하는 함수
  *
- * @param {boolean} option true 메인 화면, false 다음 블록 화면
  */
-function generateTable(option) {
+function generateTable() {
   /*
-    ? fragment를 사용하는 것이 직접 DOM을 건드는 것보다 자원이 절약된다.
+    ? fragment를 사용하는 것이
+    ? 직접 DOM을 건드는 것보다 자원이 절약된다
   */
   const tableDOM = document.createElement('table');
   const fragment = document.createDocumentFragment();
 
-  let tableRow = option ? ROW : 3;
-  let tableCol = option ? COL : 4;
-
-  Array(tableRow)
+  Array(ROW)
     .fill(0)
     .forEach(() => {
       const trDOM = document.createElement('tr');
-      Array(tableCol)
+      Array(COL)
         .fill(0)
         .forEach(() => {
           const tdDOM = document.createElement('td');
@@ -253,11 +250,37 @@ function generateTable(option) {
         });
       fragment.appendChild(trDOM);
 
-      option && gameData.push(Array(tableCol).fill(0));
+      gameData.push(Array(COL).fill(0));
     });
 
   tableDOM.appendChild(fragment);
-  option ? gameDOM.appendChild(tableDOM) : nextBlockDOM.appendChild(tableDOM);
+  gameDOM.appendChild(tableDOM);
+}
+
+/**
+ * 다음 블록 화면을 그려주는 함수
+ */
+function generateNextBlockTable() {
+  const tableDOM = document.createElement('table');
+  const fragment = document.createDocumentFragment();
+  const row = 3;
+  const col = 4;
+
+  Array(row)
+    .fill(0)
+    .forEach(() => {
+      const trDOM = document.createElement('tr');
+      Array(col)
+        .fill(0)
+        .forEach(() => {
+          const tdDOM = document.createElement('td');
+          trDOM.appendChild(tdDOM);
+        });
+      fragment.appendChild(trDOM);
+    });
+
+  tableDOM.appendChild(fragment);
+  nextBlockDOM.appendChild(tableDOM);
 }
 
 /**
@@ -270,7 +293,7 @@ function generateBlock() {
     currentBlock = nextBlock;
   }
 
-  // 새로운 블록이 생성될 때마다 현재 블록 위치를 초기화 해준다.
+  // * 새로운 블록이 생성될 때마다 현재 블록 위치를 초기화 해준다.
   currentTopLeft = [-1, 3];
 
   currentBlock.shape[0].slice(1).forEach((row, rowIndex) => {
@@ -466,13 +489,10 @@ window.addEventListener('keydown', (e) => {
     }
 
     case 'ArrowRight': {
-      console.log('Right Move');
       const nextTopLeft = [currentTopLeft[0], currentTopLeft[1] + 1];
       let isMovable = true;
       let currentBlockShape =
         currentBlock.shape[currentBlock.currentShapeIndex];
-
-      console.log(currentBlockShape);
 
       // 이동 가능한 블록인지 확인
       for (
