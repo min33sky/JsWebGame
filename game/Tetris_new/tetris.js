@@ -11,7 +11,7 @@
 
 const gameDOM = document.querySelector('#game'); // 게임 화면
 const nextBlockDOM = document.querySelector('#next-block'); // 다음 블록 화면
-const gameData = []; // 게임 진행 데이터가 저장될 배열
+let gameData = []; // 게임 진행 데이터가 저장될 배열
 
 const ROW = 22; // 테이블 세로
 const COL = 10; // 테이블 가로
@@ -287,6 +287,8 @@ function generateNextBlockTable() {
  * 블록 생성
  */
 function generateBlock() {
+  let isGameOver = false;
+
   if (!currentBlock) {
     currentBlock = BLOCKS[Math.floor(Math.random() * BLOCKS.length)];
   } else {
@@ -296,14 +298,33 @@ function generateBlock() {
   // * 새로운 블록이 생성될 때마다 현재 블록 위치를 초기화 해준다.
   currentTopLeft = [-1, 3];
 
-  currentBlock.shape[0].slice(1).forEach((row, rowIndex) => {
-    row.forEach((col, colIndex) => {
-      if (col) {
-        gameData[rowIndex][colIndex + 3] = currentBlock.numCode;
+  // 게임 종료 판정
+  currentBlock.shape[0].slice(1).forEach((row, i) => {
+    row.forEach((col, j) => {
+      if (col && gameData[i][j + 3]) {
+        isGameOver = true;
       }
     });
   });
 
+  // 생성 된 블록 화면에 그려주기
+  currentBlock.shape[0].slice(1).forEach((row, i) => {
+    row.forEach((col, j) => {
+      if (col) {
+        gameData[i][j + 3] = currentBlock.numCode;
+      }
+    });
+  });
+
+  if (isGameOver) {
+    clearInterval(timeOut);
+    console.log('게임 종료');
+  } else {
+    /*
+      ? 블록을 생성하고 다시 그려줘야 제일 위에서부터 블록이 출력이 된다.
+     */
+    draw();
+  }
   // 다음 블록을 생성한다.
   generateNextBlock();
 }
@@ -357,11 +378,6 @@ function draw() {
  * 1초마다 블록을 아래로 움직이는 함수
  */
 function moveBlockDown() {
-  /*
-    TODO : 블록이 고정된 후에 삭제 가능한 행이 있는지 확인
-
-   */
-
   const nextTopLeft = [currentTopLeft[0] + 1, currentTopLeft[1]]; // 현재 위치에서 한 칸 아래
   const activeBlockCoords = []; // 현재 블록의 셀 좌표
   let moveableBlock = true;
@@ -395,16 +411,18 @@ function moveBlockDown() {
   }
 
   if (!moveableBlock) {
+    console.log('실행1');
     // 움직일 수 없을 때 블록을 고정시키는 처리
     activeBlockCoords.forEach((cell) => {
       gameData[cell[0]][cell[1]] = gameData[cell[0]][cell[1]] * 10;
     });
 
-    // TODO: 지울 블록이 있는지 확인
-
+    // 지울 행이 있는지 확인
+    checkRowsToBeDeleted();
     // 다음 블록을 셍상
     generateBlock();
   } else {
+    console.log('실행2');
     /*
      * 고정되지 않고 아래로 움직일 수 있는 블록일 경우
      * 아래 칸으로 이동시키고 현재 칸은 지워준다.
@@ -433,12 +451,51 @@ const isActiveBlock = (value) => value > 0 && value < 10;
  * @param {number || undefined} value
  */
 const isInvalidBlock = (value) => {
-  // console.log('isInvalidBlock 호출', value);
   return value === undefined || value >= 10;
 };
 
+/**
+ * 삭제될 행을 확인한 후 삭제하는 함수
+ */
+function checkRowsToBeDeleted() {
+  /*
+    TODO
+    1. 0이 아닌수로 꽉 차있는 행을 모두 찾아서 배열에 넣어둔다.
+    2. 전체 배열에서 꽉차있는 배열의 행을 모두 제거한다.
+    3. 지워진 행만큼 0으로 채워넣는다.
+  */
+
+  const rowsFullofBlocks = [];
+
+  gameData.forEach((row, i) => {
+    let cnt = 0;
+    row.forEach((col, j) => {
+      if (gameData[i][j] !== 0) {
+        cnt++;
+      } else {
+        return;
+      }
+    });
+    if (cnt === 10) {
+      rowsFullofBlocks.push(i);
+    }
+  });
+
+  // 지울 행이 없으면 종료
+  if (rowsFullofBlocks.length === 0) return;
+
+  gameData = gameData.filter((row, i) => !rowsFullofBlocks.includes(i));
+  rowsFullofBlocks.forEach((row, i) => {
+    gameData.unshift(Array(COL).fill(0));
+  });
+
+  // TODO: 삭제 후에 점수 올리기
+}
+
 /**************************************************************
+ *
  * 키보드 이벤트
+ *
  **************************************************************/
 window.addEventListener('keydown', (e) => {
   switch (e.code) {
@@ -574,12 +631,12 @@ window.addEventListener('keydown', (e) => {
 
           /*
             * 다음 블록의 해당 셀이 존재하지만 현재 바꿀 수 없는 블록일 경우를 체크
-            ? i - currentTopleft[0]을 하는 이유
-            - i는 계속 증가하는데 nextBlockShape의 범위는 제한되어 있기 때문에
-            - 현재 위치를 계속 재설정 해줘야 인덱스 에러가 발생하지 않는다.
+            ? (i - currentTopleft[0])을 하는 이유
+            ? i는 계속 증가하는데 nextBlockShape의 범위는 제한되어 있기 때문에
+            ? 현재 위치를 계속 재설정 해줘야 인덱스 에러가 발생하지 않는다.
            */
           if (
-            // nextBlockShape[i - currentTopLeft[0]][j - currentTopLeft[1]] > 0 &&
+            nextBlockShape[i - currentTopLeft[0]][j - currentTopLeft[1]] > 0 &&
             isInvalidBlock(gameData[i] && gameData[i][j])
           ) {
             console.log('모양 바꾸기 불가능');
@@ -622,7 +679,6 @@ window.addEventListener('keydown', (e) => {
     }
 
     case 'ArrowDown': {
-      console.log('아래');
       moveBlockDown();
       break;
     }
@@ -640,4 +696,4 @@ window.addEventListener('keydown', (e) => {
 // ************************************************************************
 
 init();
-timeOut = setInterval(moveBlockDown, 200);
+timeOut = setInterval(moveBlockDown, 1000);
