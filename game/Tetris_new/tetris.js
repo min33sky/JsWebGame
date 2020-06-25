@@ -1,21 +1,18 @@
 /*****************************************
+ *
  * 테트리스
+ *
  *****************************************/
-
-/*
-  TODO
-  1. 게임이 진행 될 공간(테이블)을 생성한다. (데이터가 저장될 배열도 생성)
-  2. 각 블록에 대한 데이터 생성
-  3. 1초마다 블록이 아래로 내려간다.(하단에 고정된 블록은 움직이지 않는다.)
- */
 
 const gameDOM = document.querySelector('#game'); // 게임 화면
 const nextBlockDOM = document.querySelector('#next-block'); // 다음 블록 화면
+const resultDOM = document.querySelector('#result'); // 결과가 출력될 곳
 let gameData = []; // 게임 진행 데이터가 저장될 배열
 
 const ROW = 22; // 테이블 세로
 const COL = 10; // 테이블 가로
 let timeOut = 0; // 타이머 관련 변수
+let score = 0; // 점수
 
 let currentBlock = null; // 현재 블록
 let nextBlock = null; // 다음 블록
@@ -88,16 +85,6 @@ const BLOCKS = [
         [1, 1, 0],
         [0, 1, 0],
       ],
-      [
-        [0, 1, 1],
-        [1, 1, 0],
-        [0, 0, 0],
-      ],
-      [
-        [0, 1, 0],
-        [0, 1, 1],
-        [0, 0, 1],
-      ],
     ],
   },
   {
@@ -115,16 +102,6 @@ const BLOCKS = [
         [1, 1, 0],
         [1, 0, 0],
       ],
-      [
-        [1, 1, 0],
-        [0, 1, 1],
-        [0, 0, 0],
-      ],
-      [
-        [0, 0, 1],
-        [0, 1, 1],
-        [0, 1, 0],
-      ],
     ],
   },
   {
@@ -138,14 +115,14 @@ const BLOCKS = [
         [0, 0, 1],
       ],
       [
-        [0, 1, 0],
-        [0, 1, 0],
-        [1, 1, 0],
+        [0, 0, 1],
+        [0, 0, 1],
+        [0, 1, 1],
       ],
       [
+        [0, 0, 0],
         [1, 0, 0],
         [1, 1, 1],
-        [0, 0, 0],
       ],
       [
         [0, 1, 1],
@@ -170,14 +147,14 @@ const BLOCKS = [
         [0, 1, 0],
       ],
       [
+        [0, 0, 0],
         [0, 0, 1],
         [1, 1, 1],
-        [0, 0, 0],
       ],
       [
-        [0, 1, 0],
-        [0, 1, 0],
-        [0, 1, 1],
+        [1, 0, 0],
+        [1, 0, 0],
+        [1, 1, 0],
       ],
     ],
   },
@@ -190,18 +167,6 @@ const BLOCKS = [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [1, 1, 1, 1],
-        [0, 0, 0, 0],
-      ],
-      [
-        [0, 1, 0, 0],
-        [0, 1, 0, 0],
-        [0, 1, 0, 0],
-        [0, 1, 0, 0],
-      ],
-      [
-        [0, 0, 0, 0],
-        [1, 1, 1, 1],
-        [0, 0, 0, 0],
         [0, 0, 0, 0],
       ],
       [
@@ -318,7 +283,7 @@ function generateBlock() {
 
   if (isGameOver) {
     clearInterval(timeOut);
-    console.log('게임 종료');
+    resultDOM.textContent = `게임 종료! 최종 점수는 ${score}점 입니다.`;
   } else {
     /*
       ? 블록을 생성하고 다시 그려줘야 제일 위에서부터 블록이 출력이 된다.
@@ -375,7 +340,9 @@ function draw() {
 }
 
 /**
- * 1초마다 블록을 아래로 움직이는 함수
+ * 블록을 아래로 움직이는 함수
+  - true를 리턴하면 계속 움직일 수 있다.
+  - false를 리턴하면 더이상 움직일 수 없다.
  */
 function moveBlockDown() {
   const nextTopLeft = [currentTopLeft[0] + 1, currentTopLeft[1]]; // 현재 위치에서 한 칸 아래
@@ -411,7 +378,6 @@ function moveBlockDown() {
   }
 
   if (!moveableBlock) {
-    console.log('실행1');
     // 움직일 수 없을 때 블록을 고정시키는 처리
     activeBlockCoords.forEach((cell) => {
       gameData[cell[0]][cell[1]] = gameData[cell[0]][cell[1]] * 10;
@@ -421,8 +387,8 @@ function moveBlockDown() {
     checkRowsToBeDeleted();
     // 다음 블록을 셍상
     generateBlock();
+    return false;
   } else {
-    console.log('실행2');
     /*
      * 고정되지 않고 아래로 움직일 수 있는 블록일 경우
      * 아래 칸으로 이동시키고 현재 칸은 지워준다.
@@ -437,6 +403,7 @@ function moveBlockDown() {
     }
     currentTopLeft = nextTopLeft;
     draw();
+    return true;
   }
 }
 
@@ -490,6 +457,8 @@ function checkRowsToBeDeleted() {
   });
 
   // TODO: 삭제 후에 점수 올리기
+  score += rowsFullofBlocks.length ** 2;
+  resultDOM.textContent = `${score}점`;
 }
 
 /**************************************************************
@@ -684,7 +653,7 @@ window.addEventListener('keydown', (e) => {
     }
 
     case 'Space': {
-      console.log('스페이스');
+      while (moveBlockDown()) {}
       break;
     }
 
@@ -696,4 +665,4 @@ window.addEventListener('keydown', (e) => {
 // ************************************************************************
 
 init();
-timeOut = setInterval(moveBlockDown, 1000);
+timeOut = setInterval(moveBlockDown, 500);
